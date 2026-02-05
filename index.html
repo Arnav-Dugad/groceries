@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Splitter</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { color: #333; margin-top: 0; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .results { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #4CAF50; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+        .highlight { font-weight: bold; color: #2e7d32; }
+        .secret { color: #d32f2f; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Split the Bill</h2>
+    <label for="totalBill">Original Bill Amount</label>
+    <input type="number" id="totalBill" placeholder="Enter amount" oninput="calculate()">
+
+    <div class="results">
+        <div class="result-item">
+            <span>Inflated Total (130%):</span>
+            <span id="inflatedTotal" class="highlight">0</span>
+        </div>
+        <div class="result-item">
+            <span>Each person pays:</span>
+            <span id="share" class="highlight">0</span>
+        </div>
+        <hr>
+        <div class="result-item">
+            <span>Total Secret Profit:</span>
+            <span id="totalProfit" class="secret">0</span>
+        </div>
+        <div class="result-item">
+            <span>A & B each keep:</span>
+            <span id="kickback" class="secret">0</span>
+        </div>
+        <hr>
+        <div class="result-item">
+            <span><strong>A & B Net Cost:</strong></span>
+            <span id="netAB" style="font-weight:bold;">0</span>
+        </div>
+        <div class="result-item">
+            <span><strong>C & D Net Cost:</strong></span>
+            <span id="netCD" style="font-weight:bold;">0</span>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculate() {
+    const T = parseFloat(document.getElementById('totalBill').value) || 0;
+    
+    // Logic
+    const I = T * 1.30;
+    const S = I / 4;
+    const profit = I - T;
+    const kickback = profit / 2;
+    const netAB = S - kickback;
+    const netCD = S;
+
+    // Display
+    document.getElementById('inflatedTotal').innerText = I.toFixed(2);
+    document.getElementById('share').innerText = S.toFixed(2);
+    document.getElementById('totalProfit').innerText = profit.toFixed(2);
+    document.getElementById('kickback').innerText = kickback.toFixed(2);
+    document.getElementById('netAB').innerText = netAB.toFixed(2);
+    document.getElementById('netCD').innerText = netCD.toFixed(2);
+}
+</script>
+
+</body>
+</html>
