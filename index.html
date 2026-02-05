@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProfitSplit - Smart Expense Settlement</title>
+    <title>ProfitSplit - Shared Expense Tracker</title>
     <style>
         * {
             margin: 0;
@@ -15,16 +15,20 @@
             --bg-primary: #0a0a0f;
             --bg-secondary: #14141b;
             --bg-card: #1a1a24;
+            --bg-elevated: #1f1f2b;
             --accent: #6366f1;
             --accent-light: #818cf8;
             --accent-dark: #4f46e5;
             --success: #10b981;
+            --success-light: #34d399;
             --danger: #ef4444;
             --warning: #f59e0b;
+            --info: #3b82f6;
             --text-primary: #f8fafc;
             --text-secondary: #cbd5e1;
             --text-muted: #64748b;
             --border: rgba(203, 213, 225, 0.08);
+            --border-light: rgba(203, 213, 225, 0.12);
         }
 
         body {
@@ -34,6 +38,7 @@
             min-height: 100vh;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Header */
@@ -45,23 +50,54 @@
             top: 0;
             z-index: 100;
             backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .header-content {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.6rem;
+            font-weight: 900;
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
+        }
+
+        .shared-badge {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-name {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .header-btn {
@@ -70,8 +106,8 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 10px;
             color: var(--danger);
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -79,12 +115,13 @@
         .header-btn:hover {
             background: rgba(239, 68, 68, 0.15);
             border-color: var(--danger);
+            transform: translateY(-1px);
         }
 
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 28px 24px;
         }
 
         /* Auth */
@@ -93,27 +130,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 20px;
         }
 
         .auth-card {
             background: var(--bg-card);
             border-radius: 24px;
-            padding: 40px;
-            border: 1px solid var(--border);
-            max-width: 420px;
+            padding: 44px;
+            border: 1px solid var(--border-light);
+            max-width: 440px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
         .auth-card h2 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 8px;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .auth-subtitle {
             color: var(--text-muted);
-            margin-bottom: 32px;
+            margin-bottom: 36px;
             font-size: 0.95rem;
         }
 
@@ -126,12 +165,12 @@
             margin-bottom: 8px;
             color: var(--text-secondary);
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .form-input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 16px 18px;
             background: var(--bg-secondary);
             border: 1.5px solid var(--border);
             border-radius: 12px;
@@ -144,6 +183,7 @@
             outline: none;
             border-color: var(--accent);
             background: var(--bg-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
         .form-input::placeholder {
@@ -158,7 +198,7 @@
             border-radius: 12px;
             color: white;
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.3s;
             letter-spacing: 0.3px;
@@ -166,7 +206,7 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
         }
 
         .btn:active {
@@ -175,7 +215,7 @@
 
         .switch-text {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 28px;
             color: var(--text-muted);
             font-size: 0.9rem;
         }
@@ -183,7 +223,7 @@
         .switch-link {
             color: var(--accent);
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             text-decoration: none;
         }
 
@@ -203,58 +243,88 @@
         /* Stats */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 24px;
+            padding: 26px;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .stat-card:hover {
             border-color: var(--accent);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
         }
 
         .stat-label {
             color: var(--text-muted);
             font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            font-weight: 700;
+            letter-spacing: 1.2px;
+            margin-bottom: 10px;
+            font-weight: 800;
         }
 
         .stat-value {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 2.4rem;
+            font-weight: 900;
             color: var(--text-primary);
             letter-spacing: -1px;
         }
 
         .stat-card.profit .stat-value {
-            background: linear-gradient(135deg, var(--success), #34d399);
+            background: linear-gradient(135deg, var(--success), var(--success-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .stat-subtext {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 6px;
         }
 
         /* Card Section */
         .card {
             background: var(--bg-card);
             border-radius: 24px;
-            padding: 32px;
-            margin-bottom: 24px;
+            padding: 36px;
+            margin-bottom: 28px;
             border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            margin-bottom: 28px;
         }
 
         .card-title {
-            font-size: 1.6rem;
-            font-weight: 800;
+            font-size: 1.75rem;
+            font-weight: 900;
             margin-bottom: 6px;
             letter-spacing: -0.5px;
         }
@@ -262,7 +332,6 @@
         .card-subtitle {
             color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 28px;
         }
 
         /* Input with icon */
@@ -273,49 +342,49 @@
 
         .input-icon {
             position: absolute;
-            left: 18px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 800;
+            font-size: 1.15rem;
             pointer-events: none;
         }
 
         .input-suffix {
             position: absolute;
-            right: 18px;
+            right: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-weight: 700;
+            font-weight: 800;
             pointer-events: none;
         }
 
         .form-input.with-icon {
-            padding-left: 48px;
+            padding-left: 52px;
         }
 
         .form-input.with-suffix {
-            padding-right: 48px;
+            padding-right: 52px;
         }
 
         /* Payer Selector */
         .payer-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
             margin-bottom: 24px;
         }
 
         .payer-btn {
-            padding: 18px;
+            padding: 20px;
             background: var(--bg-secondary);
             border: 2px solid var(--border);
             border-radius: 14px;
             color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 1.05rem;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.3s;
             letter-spacing: 0.3px;
@@ -324,66 +393,76 @@
         .payer-btn:hover {
             border-color: var(--accent);
             background: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
         }
 
         .payer-btn.active {
             background: linear-gradient(135deg, var(--accent), var(--accent-light));
             border-color: var(--accent);
             color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
         }
 
         /* Preview Box */
         .preview-box {
             background: var(--bg-secondary);
             border: 2px dashed var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            margin: 24px 0;
+            border-radius: 18px;
+            padding: 26px;
+            margin: 26px 0;
             transition: all 0.3s;
         }
 
         .preview-box.active {
             border-color: var(--accent);
-            background: rgba(99, 102, 241, 0.03);
+            background: rgba(99, 102, 241, 0.04);
             border-style: solid;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.05);
         }
 
         .preview-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .preview-title {
             color: var(--accent);
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+        }
+
+        .preview-grid {
+            display: grid;
+            gap: 12px;
         }
 
         .preview-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            align-items: center;
+            padding: 12px 14px;
+            background: var(--bg-elevated);
+            border-radius: 10px;
             font-size: 0.95rem;
         }
 
         .preview-row.highlight {
-            background: rgba(99, 102, 241, 0.05);
-            padding: 16px;
-            border-radius: 10px;
-            margin-top: 12px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            background: rgba(99, 102, 241, 0.08);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 8px;
+            border: 1px solid rgba(99, 102, 241, 0.25);
         }
 
         .preview-label {
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .preview-value {
-            font-weight: 700;
+            font-weight: 800;
             color: var(--text-primary);
         }
 
@@ -395,37 +474,59 @@
         .expense-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 24px;
-            margin-bottom: 16px;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 18px;
             transition: all 0.3s;
         }
 
         .expense-card:hover {
             border-color: var(--accent);
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
         }
 
         .expense-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
         }
 
-        .expense-info h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
+        .expense-info {
+            flex: 1;
         }
 
-        .expense-meta {
+        .expense-number {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .expense-meta-grid {
+            display: grid;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             color: var(--text-muted);
             font-size: 0.85rem;
+        }
+
+        .meta-icon {
+            opacity: 0.5;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--text-secondary);
         }
 
         .expense-amounts {
@@ -435,13 +536,14 @@
         .amount-display {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
+            align-items: flex-end;
         }
 
         .amount-actual {
             color: var(--success);
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.8rem;
+            font-weight: 900;
             letter-spacing: -0.5px;
         }
 
@@ -449,85 +551,186 @@
             color: var(--text-muted);
             font-size: 0.75rem;
             text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+        }
+
+        .inflated-detail {
+            background: var(--bg-elevated);
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin-top: 8px;
+        }
+
+        .inflated-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
+        .inflated-value {
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: line-through;
+        }
+
         .profit-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             background: rgba(16, 185, 129, 0.15);
             color: var(--success);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-top: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-top: 10px;
             border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Details Section */
+        .details-section {
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .details-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+        }
+
+        .detail-item {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .detail-subvalue {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 4px;
         }
 
         /* Settlement Box */
         .settlement-box {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(129, 140, 248, 0.08));
             border: 2px solid var(--accent);
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 20px;
+            border-radius: 18px;
+            padding: 26px;
         }
 
         .settlement-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .settlement-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: 800;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             margin-bottom: 4px;
+        }
+
+        .settlement-subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
 
         .settlement-main {
             background: var(--bg-secondary);
             border-radius: 14px;
-            padding: 20px;
+            padding: 24px;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .settlement-text {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: var(--text-secondary);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
+            font-weight: 600;
         }
 
         .settlement-amount {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
             color: var(--success);
             letter-spacing: -1px;
         }
 
-        .settlement-note {
+        .settlement-breakdown {
             background: var(--bg-card);
             border-radius: 12px;
-            padding: 16px;
-            color: var(--text-muted);
+            padding: 18px;
+            margin-top: 18px;
+        }
+
+        .breakdown-title {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
             font-size: 0.9rem;
-            line-height: 1.7;
+        }
+
+        .breakdown-label {
+            color: var(--text-muted);
+        }
+
+        .breakdown-value {
+            font-weight: 700;
+            color: var(--text-secondary);
         }
 
         /* Delete Button */
         .delete-btn {
             width: 100%;
-            margin-top: 20px;
+            margin-top: 24px;
             padding: 14px;
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.08);
             border: 1.5px solid rgba(239, 68, 68, 0.3);
             border-radius: 12px;
             color: var(--danger);
             font-size: 0.9rem;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -536,16 +739,20 @@
             background: var(--danger);
             color: white;
             border-color: var(--danger);
+            transform: translateY(-1px);
         }
 
         /* Message */
         .message {
-            padding: 14px 18px;
+            padding: 16px 20px;
             border-radius: 12px;
             margin-bottom: 20px;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
             animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         @keyframes slideIn {
@@ -574,20 +781,20 @@
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 80px 20px;
+            padding: 100px 20px;
         }
 
         .empty-icon {
-            font-size: 5rem;
-            opacity: 0.15;
-            margin-bottom: 20px;
+            font-size: 6rem;
+            opacity: 0.12;
+            margin-bottom: 24px;
         }
 
         .empty-title {
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.4rem;
+            font-weight: 800;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .empty-text {
@@ -599,12 +806,13 @@
         .loading {
             display: flex;
             justify-content: center;
-            padding: 60px;
+            align-items: center;
+            padding: 80px;
         }
 
         .spinner {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border: 4px solid var(--bg-secondary);
             border-top-color: var(--accent);
             border-radius: 50%;
@@ -618,39 +826,54 @@
         /* Responsive */
         @media (max-width: 768px) {
             .container {
-                padding: 16px;
+                padding: 20px 16px;
             }
 
             .auth-card {
-                padding: 32px 24px;
+                padding: 36px 28px;
             }
 
             .card {
-                padding: 24px 20px;
+                padding: 28px 24px;
             }
 
             .stat-value {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             .expense-header {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
+                gap: 20px;
             }
 
             .expense-amounts {
                 text-align: left;
+                width: 100%;
+            }
+
+            .amount-display {
+                align-items: flex-start;
             }
 
             .settlement-amount {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
-        }
 
-        /* Smooth transitions */
-        * {
-            transition: background-color 0.3s ease;
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+
+            .header-user {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 8px;
+            }
         }
     </style>
 </head>
@@ -658,8 +881,12 @@
     <!-- Header -->
     <div class="header">
         <div class="header-content">
-            <div class="logo">💰 ProfitSplit</div>
-            <div id="headerActions" style="display: none;">
+            <div class="logo-section">
+                <div class="logo">💰 ProfitSplit</div>
+                <div class="shared-badge">Shared Workspace</div>
+            </div>
+            <div id="headerActions" style="display: none;" class="header-user">
+                <div class="user-name" id="headerUserName"></div>
                 <button class="header-btn" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -670,7 +897,7 @@
         <!-- Login -->
         <div id="loginForm" class="auth-card">
             <h2>Welcome Back</h2>
-            <p class="auth-subtitle">Sign in to manage your expenses</p>
+            <p class="auth-subtitle">Access the shared expense workspace</p>
             <div id="loginMessage"></div>
             <form onsubmit="login(event)">
                 <div class="form-group">
@@ -690,8 +917,8 @@
 
         <!-- Signup -->
         <div id="signupForm" class="auth-card" style="display: none;">
-            <h2>Get Started</h2>
-            <p class="auth-subtitle">Create your account in seconds</p>
+            <h2>Join Workspace</h2>
+            <p class="auth-subtitle">Create account to track shared expenses</p>
             <div id="signupMessage"></div>
             <form onsubmit="signup(event)">
                 <div class="form-group">
@@ -720,29 +947,34 @@
             <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-label">Expenses</div>
+                    <div class="stat-label">Total Expenses</div>
                     <div class="stat-value" id="statCount">0</div>
+                    <div class="stat-subtext">All time</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Total Spent</div>
+                    <div class="stat-label">Money Spent</div>
                     <div class="stat-value" id="statSpent">₹0</div>
+                    <div class="stat-subtext">Actual amount</div>
                 </div>
                 <div class="stat-card profit">
                     <div class="stat-label">Total Profit</div>
                     <div class="stat-value" id="statProfit">₹0</div>
+                    <div class="stat-subtext">Shared gain</div>
                 </div>
             </div>
 
             <!-- Add Expense -->
             <div class="card">
-                <h2 class="card-title">Add Expense</h2>
-                <p class="card-subtitle">Enter bill amount and inflation percentage</p>
+                <div class="card-header">
+                    <h2 class="card-title">Add New Expense</h2>
+                    <p class="card-subtitle">Record a bill that's already in Splitwise</p>
+                </div>
 
                 <form onsubmit="addExpense(event)">
                     <div id="addMessage"></div>
 
                     <div class="form-group">
-                        <label class="form-label">Who paid?</label>
+                        <label class="form-label">Who Paid the Bill?</label>
                         <div class="payer-selector">
                             <button type="button" class="payer-btn active" data-payer="arnav" onclick="selectPayer('arnav')">
                                 Arnav
@@ -753,31 +985,43 @@
                         </div>
                     </div>
 
-                    <div class="input-wrapper">
-                        <span class="input-icon">₹</span>
-                        <input type="number" class="form-input with-icon" id="actualAmount" placeholder="Enter bill amount" step="0.01" required oninput="calculatePreview()">
+                    <div class="form-group">
+                        <label class="form-label">Actual Bill Amount</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">₹</span>
+                            <input type="number" class="form-input with-icon" id="actualAmount" placeholder="e.g., 100" step="0.01" required oninput="calculatePreview()">
+                        </div>
                     </div>
 
-                    <div class="input-wrapper">
-                        <input type="number" class="form-input with-suffix" id="inflationPercent" placeholder="Inflation percentage" value="30" step="0.01" required oninput="calculatePreview()">
-                        <span class="input-suffix">%</span>
+                    <div class="form-group">
+                        <label class="form-label">Inflation Percentage</label>
+                        <div class="input-wrapper">
+                            <input type="number" class="form-input with-suffix" id="inflationPercent" placeholder="e.g., 30" value="30" step="0.01" required oninput="calculatePreview()">
+                            <span class="input-suffix">%</span>
+                        </div>
                     </div>
 
                     <div class="preview-box" id="previewBox">
                         <div class="preview-header">
-                            <div class="preview-title">💡 Preview</div>
+                            <div class="preview-title">💡 Calculation Preview</div>
                         </div>
-                        <div class="preview-row">
-                            <span class="preview-label">Splitwise Bill</span>
-                            <span class="preview-value" id="previewSplitwise">₹0</span>
-                        </div>
-                        <div class="preview-row">
-                            <span class="preview-label">Total Profit</span>
-                            <span class="preview-value profit" id="previewProfit">₹0</span>
-                        </div>
-                        <div class="preview-row highlight">
-                            <span class="preview-label" id="settlementLabel" style="font-weight: 700;">Settlement</span>
-                            <span class="preview-value profit" id="previewSettlement" style="font-size: 1.2rem;">-</span>
+                        <div class="preview-grid">
+                            <div class="preview-row">
+                                <span class="preview-label">Splitwise Bill</span>
+                                <span class="preview-value" id="previewSplitwise">₹0</span>
+                            </div>
+                            <div class="preview-row">
+                                <span class="preview-label">Total Profit</span>
+                                <span class="preview-value profit" id="previewProfit">₹0</span>
+                            </div>
+                            <div class="preview-row">
+                                <span class="preview-label">Profit per Person</span>
+                                <span class="preview-value profit" id="previewProfitEach">₹0</span>
+                            </div>
+                            <div class="preview-row highlight">
+                                <span class="preview-label" id="settlementLabel" style="font-weight: 800;">Settlement</span>
+                                <span class="preview-value profit" id="previewSettlement" style="font-size: 1.3rem;">-</span>
+                            </div>
                         </div>
                     </div>
 
@@ -787,8 +1031,10 @@
 
             <!-- Expense List -->
             <div class="card">
-                <h2 class="card-title">History</h2>
-                <p class="card-subtitle" id="expenseSubtitle">Your expense records</p>
+                <div class="card-header">
+                    <h2 class="card-title">Expense History</h2>
+                    <p class="card-subtitle" id="expenseSubtitle">Shared expense records</p>
+                </div>
                 <div id="expenseList">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
@@ -799,7 +1045,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-        import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc, serverTimestamp, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, deleteDoc, doc, serverTimestamp, onSnapshot, query } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyB8rd98MP4ljrlQWRuRBkGEQgTxUILcpB0",
@@ -817,7 +1063,6 @@
         window.currentUser = null;
         window.allExpenses = [];
         window.selectedPayer = 'arnav';
-        window.expenseCounter = 1;
 
         // Auth State
         onAuthStateChanged(auth, (user) => {
@@ -825,7 +1070,8 @@
                 window.currentUser = user;
                 document.getElementById('authContainer').style.display = 'none';
                 document.getElementById('dashboard').classList.add('active');
-                document.getElementById('headerActions').style.display = 'block';
+                document.getElementById('headerActions').style.display = 'flex';
+                document.getElementById('headerUserName').textContent = user.displayName || user.email;
                 loadExpenses();
             } else {
                 window.currentUser = null;
@@ -846,10 +1092,10 @@
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
                 let errorMsg = 'Invalid email or password';
-                if (error.code === 'auth/user-not-found') errorMsg = 'No account found with this email';
+                if (error.code === 'auth/user-not-found') errorMsg = 'No account found';
                 if (error.code === 'auth/wrong-password') errorMsg = 'Incorrect password';
-                if (error.code === 'auth/too-many-requests') errorMsg = 'Too many attempts. Please try again later';
-                messageDiv.innerHTML = `<div class="message error">${errorMsg}</div>`;
+                if (error.code === 'auth/too-many-requests') errorMsg = 'Too many attempts';
+                messageDiv.innerHTML = `<div class="message error">⚠️ ${errorMsg}</div>`;
             }
         };
 
@@ -868,7 +1114,7 @@
                 let errorMsg = 'Failed to create account';
                 if (error.code === 'auth/email-already-in-use') errorMsg = 'Email already registered';
                 if (error.code === 'auth/weak-password') errorMsg = 'Password too weak';
-                messageDiv.innerHTML = `<div class="message error">${errorMsg}</div>`;
+                messageDiv.innerHTML = `<div class="message error">⚠️ ${errorMsg}</div>`;
             }
         };
 
@@ -877,7 +1123,7 @@
             await signOut(auth);
         };
 
-        // Show Signup/Login
+        // Show Forms
         window.showSignup = () => {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('signupForm').style.display = 'block';
@@ -916,6 +1162,7 @@
 
             document.getElementById('previewSplitwise').textContent = `₹${inflated.toFixed(2)}`;
             document.getElementById('previewProfit').textContent = `₹${profit.toFixed(2)}`;
+            document.getElementById('previewProfitEach').textContent = `₹${profitEach.toFixed(2)}`;
 
             if (window.selectedPayer === 'arnav') {
                 document.getElementById('settlementLabel').textContent = 'Arnav gives Shrey';
@@ -938,7 +1185,7 @@
             messageDiv.innerHTML = '';
 
             if (actual <= 0 || inflation < 0) {
-                messageDiv.innerHTML = '<div class="message error">Please enter valid amounts</div>';
+                messageDiv.innerHTML = '<div class="message error">⚠️ Please enter valid amounts</div>';
                 return;
             }
 
@@ -947,18 +1194,31 @@
                 const profit = inflated - actual;
                 const profitEach = profit / 2;
 
+                const arnavSplit = inflated * 0.25;
+                const shreySplit = inflated * 0.25;
+                const sharmaSplit = inflated * 0.50;
+
                 const settlement = payer === 'arnav' 
                     ? { text: 'Arnav gives Shrey', amount: profitEach, from: 'arnav', to: 'shrey' }
                     : { text: 'Shrey gives Arnav', amount: profitEach, from: 'shrey', to: 'arnav' };
 
-                await addDoc(collection(db, 'profitsplit_expenses'), {
-                    userId: currentUser.uid,
+                await addDoc(collection(db, 'profitsplit_shared'), {
+                    addedBy: {
+                        uid: currentUser.uid,
+                        name: currentUser.displayName || currentUser.email,
+                        email: currentUser.email
+                    },
                     payer,
                     actualAmount: actual,
                     inflationPercent: inflation,
                     inflatedAmount: inflated,
                     profit,
                     profitEach,
+                    splitwise: {
+                        arnav: arnavSplit,
+                        shrey: shreySplit,
+                        sharma: sharmaSplit
+                    },
                     settlement,
                     timestamp: serverTimestamp()
                 });
@@ -974,18 +1234,15 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                messageDiv.innerHTML = '<div class="message error">Failed to add expense. Please try again.</div>';
+                messageDiv.innerHTML = '<div class="message error">⚠️ Failed to add expense</div>';
             }
         };
 
-        // Load Expenses
+        // Load Expenses (ALL expenses, not user-specific)
         window.loadExpenses = function() {
             if (!currentUser) return;
 
-            const q = query(
-                collection(db, 'profitsplit_expenses'),
-                where('userId', '==', currentUser.uid)
-            );
+            const q = query(collection(db, 'profitsplit_shared'));
 
             onSnapshot(q, 
                 (snapshot) => {
@@ -994,7 +1251,7 @@
                         window.allExpenses.push({ id: doc.id, ...doc.data() });
                     });
                     
-                    // Sort by timestamp (newest first)
+                    // Sort by timestamp
                     window.allExpenses.sort((a, b) => {
                         const timeA = a.timestamp?.toMillis() || 0;
                         const timeB = b.timestamp?.toMillis() || 0;
@@ -1005,7 +1262,7 @@
                     updateStats(window.allExpenses);
                 },
                 (error) => {
-                    console.error('Error loading expenses:', error);
+                    console.error('Error:', error);
                     document.getElementById('expenseList').innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">⚠️</div>
@@ -1026,7 +1283,7 @@
                     <div class="empty-state">
                         <div class="empty-icon">📝</div>
                         <div class="empty-title">No expenses yet</div>
-                        <div class="empty-text">Add your first expense above to get started</div>
+                        <div class="empty-text">Add the first expense to get started</div>
                     </div>
                 `;
                 return;
@@ -1045,42 +1302,96 @@
                 });
 
                 const expenseNum = expenses.length - index;
+                const payerName = exp.payer === 'arnav' ? 'Arnav' : 'Shrey';
+                const addedByName = exp.addedBy?.name || 'Unknown';
 
                 return `
                     <div class="expense-card">
                         <div class="expense-header">
                             <div class="expense-info">
-                                <h3>Expense #${expenseNum}</h3>
-                                <div class="expense-meta">
-                                    ${dateStr} at ${timeStr} • Paid by ${exp.payer === 'arnav' ? 'Arnav' : 'Shrey'}
+                                <div class="expense-number">Expense #${expenseNum}</div>
+                                <div class="expense-meta-grid">
+                                    <div class="meta-row">
+                                        <span class="meta-icon">📅</span>
+                                        <span class="meta-value">${dateStr} at ${timeStr}</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span class="meta-icon">💳</span>
+                                        <span class="meta-value">Paid by ${payerName}</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span class="meta-icon">👤</span>
+                                        <span class="meta-value">Added by ${addedByName}</span>
+                                    </div>
+                                    <div class="meta-row">
+                                        <span class="meta-icon">📊</span>
+                                        <span class="meta-value">Inflated by ${exp.inflationPercent}%</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="expense-amounts">
                                 <div class="amount-display">
-                                    <div class="amount-label">Actual</div>
+                                    <div class="amount-label">Actual Bill</div>
                                     <div class="amount-actual">₹${exp.actualAmount.toFixed(2)}</div>
+                                    <div class="inflated-detail">
+                                        <div class="inflated-label">In Splitwise</div>
+                                        <div class="inflated-value">₹${exp.inflatedAmount.toFixed(2)}</div>
+                                    </div>
+                                    <div class="profit-badge">
+                                        💰 +₹${exp.profit.toFixed(2)} profit
+                                    </div>
                                 </div>
-                                <div class="profit-badge">+₹${exp.profit.toFixed(2)} profit</div>
+                            </div>
+                        </div>
+
+                        <div class="details-section">
+                            <div class="details-title">Splitwise Breakdown (25% / 25% / 50%)</div>
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <div class="detail-label">Arnav's Share</div>
+                                    <div class="detail-value">₹${exp.splitwise.arnav.toFixed(2)}</div>
+                                    <div class="detail-subvalue">25% of ₹${exp.inflatedAmount.toFixed(2)}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Shrey's Share</div>
+                                    <div class="detail-value">₹${exp.splitwise.shrey.toFixed(2)}</div>
+                                    <div class="detail-subvalue">25% of ₹${exp.inflatedAmount.toFixed(2)}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Sharma's Share</div>
+                                    <div class="detail-value">₹${exp.splitwise.sharma.toFixed(2)}</div>
+                                    <div class="detail-subvalue">50% of ₹${exp.inflatedAmount.toFixed(2)}</div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="settlement-box">
                             <div class="settlement-header">
-                                <div class="settlement-title">💸 Settlement</div>
+                                <div class="settlement-title">💸 Required Settlement</div>
+                                <div class="settlement-subtitle">Outside of Splitwise</div>
                             </div>
                             <div class="settlement-main">
                                 <div class="settlement-text">${exp.settlement.text}</div>
                                 <div class="settlement-amount">₹${exp.settlement.amount.toFixed(2)}</div>
                             </div>
-                            <div class="settlement-note">
-                                <strong>Details:</strong> Bill inflated to ₹${exp.inflatedAmount.toFixed(2)} (+${exp.inflationPercent}%). 
-                                The ₹${exp.profit.toFixed(2)} profit is split equally, so 
-                                ${exp.settlement.from === 'arnav' ? 'Arnav' : 'Shrey'} gives 
-                                ${exp.settlement.to === 'arnav' ? 'Arnav' : 'Shrey'} half the profit.
+                            <div class="settlement-breakdown">
+                                <div class="breakdown-title">💡 How it works:</div>
+                                <div class="breakdown-row">
+                                    <span class="breakdown-label">Total Profit</span>
+                                    <span class="breakdown-value">₹${exp.profit.toFixed(2)}</span>
+                                </div>
+                                <div class="breakdown-row">
+                                    <span class="breakdown-label">Each Person Gets</span>
+                                    <span class="breakdown-value">₹${exp.profitEach.toFixed(2)}</span>
+                                </div>
+                                <div class="breakdown-row">
+                                    <span class="breakdown-label">Sharma Doesn't Know</span>
+                                    <span class="breakdown-value">He pays full amount</span>
+                                </div>
                             </div>
                         </div>
 
-                        <button class="delete-btn" onclick="deleteExpense('${exp.id}')">🗑️ Delete</button>
+                        <button class="delete-btn" onclick="deleteExpense('${exp.id}')">🗑️ Delete Expense</button>
                     </div>
                 `;
             }).join('');
@@ -1096,15 +1407,15 @@
             document.getElementById('statSpent').textContent = `₹${spent.toFixed(0)}`;
             document.getElementById('statProfit').textContent = `₹${profit.toFixed(0)}`;
             document.getElementById('expenseSubtitle').textContent = count > 0 
-                ? `${count} expense${count > 1 ? 's' : ''} recorded` 
+                ? `${count} expense${count > 1 ? 's' : ''} in shared workspace` 
                 : 'No expenses yet';
         }
 
         // Delete Expense
         window.deleteExpense = async function(id) {
-            if (!confirm('Delete this expense?')) return;
+            if (!confirm('Delete this expense from shared workspace?')) return;
             try {
-                await deleteDoc(doc(db, 'profitsplit_expenses', id));
+                await deleteDoc(doc(db, 'profitsplit_shared', id));
             } catch (error) {
                 alert('Failed to delete. Please try again.');
             }
