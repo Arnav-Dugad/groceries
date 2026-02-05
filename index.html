@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProfitSplit - Expense Settlement</title>
+    <title>ProfitSplit - Smart Expense Settlement</title>
     <style>
         * {
             margin: 0;
@@ -12,39 +12,43 @@
         }
 
         :root {
-            --bg-primary: #0d0d12;
-            --bg-secondary: #16161d;
-            --bg-card: #1c1c26;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #14141b;
+            --bg-card: #1a1a24;
             --accent: #6366f1;
             --accent-light: #818cf8;
+            --accent-dark: #4f46e5;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
             --text-muted: #64748b;
-            --border: rgba(148, 163, 184, 0.1);
+            --border: rgba(203, 213, 225, 0.08);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Header */
         .header {
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
-            padding: 16px 20px;
+            padding: 18px 24px;
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(20px);
         }
 
         .header-content {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -53,54 +57,83 @@
 
         .logo {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header-btn {
+            padding: 10px 20px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            color: var(--danger);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--danger);
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
         }
 
         /* Auth */
-        .auth-container {
-            max-width: 400px;
-            margin: 60px auto;
+        .auth-wrapper {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .auth-card {
             background: var(--bg-card);
-            border-radius: 20px;
-            padding: 32px;
+            border-radius: 24px;
+            padding: 40px;
             border: 1px solid var(--border);
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         .auth-card h2 {
-            font-size: 1.75rem;
-            margin-bottom: 24px;
-            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .auth-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-size: 0.95rem;
         }
 
         .form-group {
             margin-bottom: 20px;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
             margin-bottom: 8px;
             color: var(--text-secondary);
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .form-input {
             width: 100%;
             padding: 14px 16px;
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            border: 1.5px solid var(--border);
             border-radius: 12px;
             color: var(--text-primary);
             font-size: 1rem;
@@ -110,46 +143,52 @@
         .form-input:focus {
             outline: none;
             border-color: var(--accent);
+            background: var(--bg-primary);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
         }
 
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             background: linear-gradient(135deg, var(--accent), var(--accent-light));
             border: none;
             border-radius: 12px;
             color: white;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
 
         .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-small {
-            width: auto;
-            padding: 10px 20px;
-            font-size: 0.9rem;
-        }
-
-        .btn-danger {
-            background: var(--danger);
+            transform: translateY(0);
         }
 
         .switch-text {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 24px;
             color: var(--text-muted);
             font-size: 0.9rem;
         }
 
-        .switch-text a {
+        .switch-link {
             color: var(--accent);
             cursor: pointer;
             font-weight: 600;
+            text-decoration: none;
+        }
+
+        .switch-link:hover {
+            text-decoration: underline;
         }
 
         /* Dashboard */
@@ -161,90 +200,137 @@
             display: block;
         }
 
-        .section {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .section-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 24px;
-        }
-
         /* Stats */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
         }
 
         .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             margin-bottom: 8px;
+            font-weight: 700;
         }
 
         .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: 800;
             color: var(--text-primary);
+            letter-spacing: -1px;
         }
 
         .stat-card.profit .stat-value {
-            color: var(--success);
+            background: linear-gradient(135deg, var(--success), #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Input with prefix */
+        /* Card Section */
+        .card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+
+        /* Input with icon */
         .input-wrapper {
             position: relative;
+            margin-bottom: 20px;
         }
 
-        .input-prefix {
+        .input-icon {
             position: absolute;
-            left: 16px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.1rem;
             pointer-events: none;
         }
 
         .input-suffix {
             position: absolute;
-            right: 16px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-weight: 600;
+            font-weight: 700;
             pointer-events: none;
         }
 
-        .form-input.with-prefix {
-            padding-left: 40px;
+        .form-input.with-icon {
+            padding-left: 48px;
         }
 
         .form-input.with-suffix {
-            padding-right: 40px;
+            padding-right: 48px;
+        }
+
+        /* Payer Selector */
+        .payer-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .payer-btn {
+            padding: 18px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.3px;
+        }
+
+        .payer-btn:hover {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .payer-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
         /* Preview Box */
@@ -252,21 +338,28 @@
             background: var(--bg-secondary);
             border: 2px dashed var(--border);
             border-radius: 16px;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 24px;
+            margin: 24px 0;
+            transition: all 0.3s;
         }
 
         .preview-box.active {
             border-color: var(--accent);
-            background: rgba(99, 102, 241, 0.05);
+            background: rgba(99, 102, 241, 0.03);
+            border-style: solid;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .preview-title {
             color: var(--accent);
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 16px;
-            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .preview-row {
@@ -276,20 +369,21 @@
             font-size: 0.95rem;
         }
 
-        .preview-row.total {
-            border-top: 2px solid var(--border);
+        .preview-row.highlight {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 16px;
+            border-radius: 10px;
             margin-top: 12px;
-            padding-top: 16px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
 
         .preview-label {
             color: var(--text-secondary);
+            font-weight: 500;
         }
 
         .preview-value {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
@@ -297,16 +391,12 @@
             color: var(--success);
         }
 
-        .preview-value.danger {
-            color: var(--danger);
-        }
-
         /* Expense Card */
         .expense-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 18px;
+            padding: 24px;
             margin-bottom: 16px;
             transition: all 0.3s;
         }
@@ -314,128 +404,169 @@
         .expense-card:hover {
             border-color: var(--accent);
             transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .expense-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
-            margin-bottom: 16px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .expense-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 4px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
         }
 
-        .expense-date {
+        .expense-meta {
             color: var(--text-muted);
             font-size: 0.85rem;
         }
 
-        .expense-amount {
+        .expense-amounts {
             text-align: right;
+        }
+
+        .amount-display {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .amount-actual {
             color: var(--success);
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
-        .amount-inflated {
+        .amount-label {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            text-decoration: line-through;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .profit-badge {
             display: inline-block;
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.15);
             color: var(--success);
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 0.85rem;
-            font-weight: 600;
-            margin-top: 4px;
-            border: 1px solid var(--success);
+            font-weight: 700;
+            margin-top: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         /* Settlement Box */
         .settlement-box {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(129, 140, 248, 0.1));
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(129, 140, 248, 0.08));
             border: 2px solid var(--accent);
             border-radius: 16px;
             padding: 24px;
             margin-top: 20px;
         }
 
-        .settlement-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--accent);
+        .settlement-header {
             text-align: center;
+            margin-bottom: 20px;
         }
 
-        .settlement-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
+        .settlement-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .settlement-main {
             background: var(--bg-secondary);
-            border-radius: 12px;
-            margin-bottom: 8px;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
         }
 
-        .settlement-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .settlement-person {
-            font-weight: 600;
-            font-size: 1rem;
+        .settlement-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
         }
 
         .settlement-amount {
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .settlement-amount.positive {
+            font-size: 2.5rem;
+            font-weight: 900;
             color: var(--success);
-        }
-
-        .settlement-amount.negative {
-            color: var(--danger);
+            letter-spacing: -1px;
         }
 
         .settlement-note {
             background: var(--bg-card);
             border-radius: 12px;
             padding: 16px;
-            margin-top: 16px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             font-size: 0.9rem;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
-        /* Messages */
-        .message {
-            padding: 12px 16px;
+        /* Delete Button */
+        .delete-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1.5px solid rgba(239, 68, 68, 0.3);
             border-radius: 12px;
-            margin-bottom: 16px;
+            color: var(--danger);
             font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        /* Message */
+        .message {
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.error {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.15);
             border: 1px solid var(--danger);
             color: var(--danger);
         }
 
         .message.success {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.15);
             border: 1px solid var(--success);
             color: var(--success);
         }
@@ -443,58 +574,45 @@
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 20px;
         }
 
         .empty-icon {
-            font-size: 4rem;
-            opacity: 0.3;
-            margin-bottom: 16px;
+            font-size: 5rem;
+            opacity: 0.15;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
         }
 
         .empty-text {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         /* Loading */
         .loading {
             display: flex;
             justify-content: center;
-            padding: 40px;
+            padding: 60px;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--bg-card);
+            width: 44px;
+            height: 44px;
+            border: 4px solid var(--bg-secondary);
             border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        /* Delete Button */
-        .delete-btn {
-            margin-top: 16px;
-            padding: 10px 20px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            border-radius: 10px;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            width: 100%;
-        }
-
-        .delete-btn:hover {
-            background: var(--danger);
-            color: white;
         }
 
         /* Responsive */
@@ -503,48 +621,36 @@
                 padding: 16px;
             }
 
+            .auth-card {
+                padding: 32px 24px;
+            }
+
+            .card {
+                padding: 24px 20px;
+            }
+
             .stat-value {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
 
             .expense-header {
                 flex-direction: column;
-                gap: 12px;
+                align-items: flex-start;
+                gap: 16px;
             }
 
-            .expense-amount {
+            .expense-amounts {
                 text-align: left;
             }
+
+            .settlement-amount {
+                font-size: 2rem;
+            }
         }
 
-        /* Who Paid Selector */
-        .who-paid-selector {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .who-paid-btn {
-            flex: 1;
-            padding: 14px;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .who-paid-btn.active {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .who-paid-btn:active {
-            transform: scale(0.98);
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
@@ -554,54 +660,56 @@
         <div class="header-content">
             <div class="logo">💰 ProfitSplit</div>
             <div id="headerActions" style="display: none;">
-                <button class="btn btn-small btn-danger" onclick="logout()">Logout</button>
+                <button class="header-btn" onclick="logout()">Logout</button>
             </div>
         </div>
     </div>
 
     <!-- Auth Container -->
-    <div id="authContainer" class="auth-container">
+    <div id="authContainer" class="auth-wrapper">
         <!-- Login -->
         <div id="loginForm" class="auth-card">
-            <h2>Welcome Back! 👋</h2>
+            <h2>Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to manage your expenses</p>
             <div id="loginMessage"></div>
             <form onsubmit="login(event)">
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-input" id="loginEmail" required>
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="loginEmail" placeholder="you@example.com" required>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-input" id="loginPassword" required>
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="btn">Sign In</button>
             </form>
             <div class="switch-text">
-                Don't have an account? <a onclick="showSignup()">Sign up</a>
+                Don't have an account? <a class="switch-link" onclick="showSignup()">Create one</a>
             </div>
         </div>
 
         <!-- Signup -->
         <div id="signupForm" class="auth-card" style="display: none;">
-            <h2>Create Account ✨</h2>
+            <h2>Get Started</h2>
+            <p class="auth-subtitle">Create your account in seconds</p>
             <div id="signupMessage"></div>
             <form onsubmit="signup(event)">
                 <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-input" id="signupName" required>
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-input" id="signupName" placeholder="Your name" required>
                 </div>
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-input" id="signupEmail" required>
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="signupEmail" placeholder="you@example.com" required>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-input" id="signupPassword" required minlength="6">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="signupPassword" placeholder="Minimum 6 characters" required minlength="6">
                 </div>
                 <button type="submit" class="btn">Create Account</button>
             </form>
             <div class="switch-text">
-                Already have an account? <a onclick="showLogin()">Sign in</a>
+                Already have an account? <a class="switch-link" onclick="showLogin()">Sign in</a>
             </div>
         </div>
     </div>
@@ -612,7 +720,7 @@
             <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-label">Total Expenses</div>
+                    <div class="stat-label">Expenses</div>
                     <div class="stat-value" id="statCount">0</div>
                 </div>
                 <div class="stat-card">
@@ -626,71 +734,50 @@
             </div>
 
             <!-- Add Expense -->
-            <div class="section">
-                <div class="section-title">Add Expense</div>
-                <div class="section-subtitle">Enter the bill amount and how much to inflate it</div>
+            <div class="card">
+                <h2 class="card-title">Add Expense</h2>
+                <p class="card-subtitle">Enter bill amount and inflation percentage</p>
 
                 <form onsubmit="addExpense(event)">
                     <div id="addMessage"></div>
 
                     <div class="form-group">
-                        <label>Description</label>
-                        <input type="text" class="form-input" id="description" placeholder="e.g., Grocery shopping" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Who paid the bill?</label>
-                        <div class="who-paid-selector">
-                            <button type="button" class="who-paid-btn active" data-payer="arnav" onclick="selectPayer('arnav')">
+                        <label class="form-label">Who paid?</label>
+                        <div class="payer-selector">
+                            <button type="button" class="payer-btn active" data-payer="arnav" onclick="selectPayer('arnav')">
                                 Arnav
                             </button>
-                            <button type="button" class="who-paid-btn" data-payer="shrey" onclick="selectPayer('shrey')">
+                            <button type="button" class="payer-btn" data-payer="shrey" onclick="selectPayer('shrey')">
                                 Shrey
                             </button>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Actual Bill Amount</label>
-                        <div class="input-wrapper">
-                            <span class="input-prefix">₹</span>
-                            <input type="number" class="form-input with-prefix" id="actualAmount" placeholder="100" step="0.01" required oninput="calculatePreview()">
-                        </div>
+                    <div class="input-wrapper">
+                        <span class="input-icon">₹</span>
+                        <input type="number" class="form-input with-icon" id="actualAmount" placeholder="Enter bill amount" step="0.01" required oninput="calculatePreview()">
                     </div>
 
-                    <div class="form-group">
-                        <label>Inflation Percentage</label>
-                        <div class="input-wrapper">
-                            <input type="number" class="form-input with-suffix" id="inflationPercent" placeholder="30" value="30" step="0.01" required oninput="calculatePreview()">
-                            <span class="input-suffix">%</span>
-                        </div>
+                    <div class="input-wrapper">
+                        <input type="number" class="form-input with-suffix" id="inflationPercent" placeholder="Inflation percentage" value="30" step="0.01" required oninput="calculatePreview()">
+                        <span class="input-suffix">%</span>
                     </div>
 
                     <div class="preview-box" id="previewBox">
-                        <div class="preview-title">💡 Calculation Preview</div>
+                        <div class="preview-header">
+                            <div class="preview-title">💡 Preview</div>
+                        </div>
                         <div class="preview-row">
-                            <span class="preview-label">Splitwise Bill:</span>
+                            <span class="preview-label">Splitwise Bill</span>
                             <span class="preview-value" id="previewSplitwise">₹0</span>
                         </div>
                         <div class="preview-row">
-                            <span class="preview-label">Total Profit:</span>
+                            <span class="preview-label">Total Profit</span>
                             <span class="preview-value profit" id="previewProfit">₹0</span>
                         </div>
-                        <div class="preview-row">
-                            <span class="preview-label">Arnav's Splitwise Share (25%):</span>
-                            <span class="preview-value" id="previewArnavSplit">₹0</span>
-                        </div>
-                        <div class="preview-row">
-                            <span class="preview-label">Shrey's Splitwise Share (25%):</span>
-                            <span class="preview-value" id="previewShreySplit">₹0</span>
-                        </div>
-                        <div class="preview-row">
-                            <span class="preview-label">Sharma's Splitwise Share (50%):</span>
-                            <span class="preview-value" id="previewSharmaSplit">₹0</span>
-                        </div>
-                        <div class="preview-row total">
-                            <span class="preview-label" id="settlementLabel">Settlement:</span>
-                            <span class="preview-value profit" id="previewSettlement">-</span>
+                        <div class="preview-row highlight">
+                            <span class="preview-label" id="settlementLabel" style="font-weight: 700;">Settlement</span>
+                            <span class="preview-value profit" id="previewSettlement" style="font-size: 1.2rem;">-</span>
                         </div>
                     </div>
 
@@ -699,9 +786,9 @@
             </div>
 
             <!-- Expense List -->
-            <div class="section">
-                <div class="section-title">Expense History</div>
-                <div class="section-subtitle" id="expenseSubtitle">Your recorded expenses</div>
+            <div class="card">
+                <h2 class="card-title">History</h2>
+                <p class="card-subtitle" id="expenseSubtitle">Your expense records</p>
                 <div id="expenseList">
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
@@ -712,7 +799,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, Timestamp, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where, deleteDoc, doc, serverTimestamp, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyB8rd98MP4ljrlQWRuRBkGEQgTxUILcpB0",
@@ -730,6 +817,7 @@
         window.currentUser = null;
         window.allExpenses = [];
         window.selectedPayer = 'arnav';
+        window.expenseCounter = 1;
 
         // Auth State
         onAuthStateChanged(auth, (user) => {
@@ -741,7 +829,7 @@
                 loadExpenses();
             } else {
                 window.currentUser = null;
-                document.getElementById('authContainer').style.display = 'block';
+                document.getElementById('authContainer').style.display = 'flex';
                 document.getElementById('dashboard').classList.remove('active');
                 document.getElementById('headerActions').style.display = 'none';
             }
@@ -757,7 +845,11 @@
             try {
                 await signInWithEmailAndPassword(auth, email, password);
             } catch (error) {
-                messageDiv.innerHTML = `<div class="message error">${error.message}</div>`;
+                let errorMsg = 'Invalid email or password';
+                if (error.code === 'auth/user-not-found') errorMsg = 'No account found with this email';
+                if (error.code === 'auth/wrong-password') errorMsg = 'Incorrect password';
+                if (error.code === 'auth/too-many-requests') errorMsg = 'Too many attempts. Please try again later';
+                messageDiv.innerHTML = `<div class="message error">${errorMsg}</div>`;
             }
         };
 
@@ -773,7 +865,10 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(userCredential.user, { displayName: name });
             } catch (error) {
-                messageDiv.innerHTML = `<div class="message error">${error.message}</div>`;
+                let errorMsg = 'Failed to create account';
+                if (error.code === 'auth/email-already-in-use') errorMsg = 'Email already registered';
+                if (error.code === 'auth/weak-password') errorMsg = 'Password too weak';
+                messageDiv.innerHTML = `<div class="message error">${errorMsg}</div>`;
             }
         };
 
@@ -796,7 +891,7 @@
         // Select Payer
         window.selectPayer = function(payer) {
             window.selectedPayer = payer;
-            document.querySelectorAll('.who-paid-btn').forEach(btn => {
+            document.querySelectorAll('.payer-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-payer="${payer}"]`).classList.add('active');
@@ -815,42 +910,18 @@
 
             document.getElementById('previewBox').classList.add('active');
 
-            // Calculate inflated amount
             const inflated = actual * (1 + inflation / 100);
             const profit = inflated - actual;
-
-            // Splitwise shares (25%, 25%, 50%)
-            const arnavSplit = inflated * 0.25;
-            const shreySplit = inflated * 0.25;
-            const sharmaSplit = inflated * 0.50;
-
-            // Profit split equally between Arnav and Shrey
             const profitEach = profit / 2;
 
             document.getElementById('previewSplitwise').textContent = `₹${inflated.toFixed(2)}`;
             document.getElementById('previewProfit').textContent = `₹${profit.toFixed(2)}`;
-            document.getElementById('previewArnavSplit').textContent = `₹${arnavSplit.toFixed(2)}`;
-            document.getElementById('previewShreySplit').textContent = `₹${shreySplit.toFixed(2)}`;
-            document.getElementById('previewSharmaSplit').textContent = `₹${sharmaSplit.toFixed(2)}`;
 
-            // Calculate settlement
             if (window.selectedPayer === 'arnav') {
-                // Arnav paid, so in Splitwise:
-                // - Shrey owes Arnav: shreySplit
-                // - Sharma owes Arnav: sharmaSplit
-                // After profit sharing:
-                // - Shrey should actually pay: shreySplit - profitEach
-                // So Arnav returns to Shrey: profitEach
-                document.getElementById('settlementLabel').textContent = 'Arnav gives Shrey:';
+                document.getElementById('settlementLabel').textContent = 'Arnav gives Shrey';
                 document.getElementById('previewSettlement').textContent = `₹${profitEach.toFixed(2)}`;
             } else {
-                // Shrey paid, so in Splitwise:
-                // - Arnav owes Shrey: arnavSplit
-                // - Sharma owes Shrey: sharmaSplit
-                // After profit sharing:
-                // - Arnav should actually pay: arnavSplit - profitEach
-                // So Shrey returns to Arnav: profitEach
-                document.getElementById('settlementLabel').textContent = 'Shrey gives Arnav:';
+                document.getElementById('settlementLabel').textContent = 'Shrey gives Arnav';
                 document.getElementById('previewSettlement').textContent = `₹${profitEach.toFixed(2)}`;
             }
         };
@@ -859,7 +930,6 @@
         window.addExpense = async function(event) {
             event.preventDefault();
             
-            const description = document.getElementById('description').value;
             const actual = parseFloat(document.getElementById('actualAmount').value);
             const inflation = parseFloat(document.getElementById('inflationPercent').value);
             const payer = window.selectedPayer;
@@ -867,77 +937,30 @@
             const messageDiv = document.getElementById('addMessage');
             messageDiv.innerHTML = '';
 
-            if (actual <= 0) {
-                messageDiv.innerHTML = '<div class="message error">Please enter a valid amount</div>';
-                return;
-            }
-
-            if (inflation < 0) {
-                messageDiv.innerHTML = '<div class="message error">Inflation cannot be negative</div>';
+            if (actual <= 0 || inflation < 0) {
+                messageDiv.innerHTML = '<div class="message error">Please enter valid amounts</div>';
                 return;
             }
 
             try {
                 const inflated = actual * (1 + inflation / 100);
                 const profit = inflated - actual;
-
-                const arnavSplit = inflated * 0.25;
-                const shreySplit = inflated * 0.25;
-                const sharmaSplit = inflated * 0.50;
-
                 const profitEach = profit / 2;
 
-                // Who owes what in Splitwise
-                let splitwiseDebts = {};
-                if (payer === 'arnav') {
-                    splitwiseDebts = {
-                        arnavOwes: 0, // Arnav paid
-                        shreyOwes: shreySplit,
-                        sharmaOwes: sharmaSplit
-                    };
-                } else {
-                    splitwiseDebts = {
-                        arnavOwes: arnavSplit,
-                        shreyOwes: 0, // Shrey paid
-                        sharmaOwes: sharmaSplit
-                    };
-                }
+                const settlement = payer === 'arnav' 
+                    ? { text: 'Arnav gives Shrey', amount: profitEach, from: 'arnav', to: 'shrey' }
+                    : { text: 'Shrey gives Arnav', amount: profitEach, from: 'shrey', to: 'arnav' };
 
-                // Settlement between Arnav and Shrey
-                let settlement = {};
-                if (payer === 'arnav') {
-                    settlement = {
-                        description: `Arnav gives Shrey ₹${profitEach.toFixed(2)}`,
-                        amount: profitEach,
-                        from: 'arnav',
-                        to: 'shrey'
-                    };
-                } else {
-                    settlement = {
-                        description: `Shrey gives Arnav ₹${profitEach.toFixed(2)}`,
-                        amount: profitEach,
-                        from: 'shrey',
-                        to: 'arnav'
-                    };
-                }
-
-                await addDoc(collection(db, 'profitsplit_v2'), {
+                await addDoc(collection(db, 'profitsplit_expenses'), {
                     userId: currentUser.uid,
-                    description,
                     payer,
                     actualAmount: actual,
                     inflationPercent: inflation,
                     inflatedAmount: inflated,
                     profit,
                     profitEach,
-                    splitwise: {
-                        arnav: arnavSplit,
-                        shrey: shreySplit,
-                        sharma: sharmaSplit
-                    },
-                    splitwiseDebts,
                     settlement,
-                    createdAt: Timestamp.now()
+                    timestamp: serverTimestamp()
                 });
 
                 messageDiv.innerHTML = '<div class="message success">✅ Expense added successfully!</div>';
@@ -947,11 +970,11 @@
 
                 setTimeout(() => {
                     messageDiv.innerHTML = '';
-                }, 3000);
+                }, 2500);
 
             } catch (error) {
-                console.error('Error adding expense:', error);
-                messageDiv.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+                console.error('Error:', error);
+                messageDiv.innerHTML = '<div class="message error">Failed to add expense. Please try again.</div>';
             }
         };
 
@@ -960,27 +983,38 @@
             if (!currentUser) return;
 
             const q = query(
-                collection(db, 'profitsplit_v2'),
-                where('userId', '==', currentUser.uid),
-                orderBy('createdAt', 'desc')
+                collection(db, 'profitsplit_expenses'),
+                where('userId', '==', currentUser.uid)
             );
 
-            onSnapshot(q, (snapshot) => {
-                window.allExpenses = [];
-                snapshot.forEach((doc) => {
-                    window.allExpenses.push({ id: doc.id, ...doc.data() });
-                });
-                displayExpenses(window.allExpenses);
-                updateStats(window.allExpenses);
-            }, (error) => {
-                console.error('Error loading expenses:', error);
-                document.getElementById('expenseList').innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">⚠️</div>
-                        <div class="empty-text">Error loading expenses</div>
-                    </div>
-                `;
-            });
+            onSnapshot(q, 
+                (snapshot) => {
+                    window.allExpenses = [];
+                    snapshot.forEach((doc) => {
+                        window.allExpenses.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    // Sort by timestamp (newest first)
+                    window.allExpenses.sort((a, b) => {
+                        const timeA = a.timestamp?.toMillis() || 0;
+                        const timeB = b.timestamp?.toMillis() || 0;
+                        return timeB - timeA;
+                    });
+
+                    displayExpenses(window.allExpenses);
+                    updateStats(window.allExpenses);
+                },
+                (error) => {
+                    console.error('Error loading expenses:', error);
+                    document.getElementById('expenseList').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">⚠️</div>
+                            <div class="empty-title">Connection Error</div>
+                            <div class="empty-text">Please refresh the page</div>
+                        </div>
+                    `;
+                }
+            );
         };
 
         // Display Expenses
@@ -991,71 +1025,62 @@
                 listDiv.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">📝</div>
-                        <div class="empty-text">No expenses yet. Add your first one above!</div>
+                        <div class="empty-title">No expenses yet</div>
+                        <div class="empty-text">Add your first expense above to get started</div>
                     </div>
                 `;
                 return;
             }
 
-            listDiv.innerHTML = expenses.map(exp => {
-                const date = exp.createdAt ? exp.createdAt.toDate() : new Date();
-                const dateStr = date.toLocaleDateString('en-IN', {
+            listDiv.innerHTML = expenses.map((exp, index) => {
+                const timestamp = exp.timestamp?.toDate() || new Date();
+                const dateStr = timestamp.toLocaleDateString('en-IN', {
                     day: 'numeric',
                     month: 'short',
-                    year: 'numeric',
+                    year: 'numeric'
+                });
+                const timeStr = timestamp.toLocaleTimeString('en-IN', {
                     hour: '2-digit',
                     minute: '2-digit'
                 });
+
+                const expenseNum = expenses.length - index;
 
                 return `
                     <div class="expense-card">
                         <div class="expense-header">
                             <div class="expense-info">
-                                <h3>${exp.description}</h3>
-                                <div class="expense-date">${dateStr} • Paid by ${exp.payer === 'arnav' ? 'Arnav' : 'Shrey'}</div>
+                                <h3>Expense #${expenseNum}</h3>
+                                <div class="expense-meta">
+                                    ${dateStr} at ${timeStr} • Paid by ${exp.payer === 'arnav' ? 'Arnav' : 'Shrey'}
+                                </div>
                             </div>
-                            <div class="expense-amount">
-                                <div class="amount-actual">₹${exp.actualAmount.toFixed(2)}</div>
-                                <div class="amount-inflated">₹${exp.inflatedAmount.toFixed(2)}</div>
-                                <div class="profit-badge">+₹${exp.profit.toFixed(2)}</div>
-                            </div>
-                        </div>
-
-                        <div class="preview-box active">
-                            <div class="preview-title">📊 Splitwise Breakdown</div>
-                            <div class="preview-row">
-                                <span class="preview-label">Splitwise Bill:</span>
-                                <span class="preview-value">₹${exp.inflatedAmount.toFixed(2)}</span>
-                            </div>
-                            <div class="preview-row">
-                                <span class="preview-label">Arnav's Share (25%):</span>
-                                <span class="preview-value">₹${exp.splitwise.arnav.toFixed(2)}</span>
-                            </div>
-                            <div class="preview-row">
-                                <span class="preview-label">Shrey's Share (25%):</span>
-                                <span class="preview-value">₹${exp.splitwise.shrey.toFixed(2)}</span>
-                            </div>
-                            <div class="preview-row">
-                                <span class="preview-label">Sharma's Share (50%):</span>
-                                <span class="preview-value">₹${exp.splitwise.sharma.toFixed(2)}</span>
+                            <div class="expense-amounts">
+                                <div class="amount-display">
+                                    <div class="amount-label">Actual</div>
+                                    <div class="amount-actual">₹${exp.actualAmount.toFixed(2)}</div>
+                                </div>
+                                <div class="profit-badge">+₹${exp.profit.toFixed(2)} profit</div>
                             </div>
                         </div>
 
                         <div class="settlement-box">
-                            <div class="settlement-title">💰 Settlement Required</div>
-                            <div class="settlement-row">
-                                <span class="settlement-person">${exp.settlement.from === 'arnav' ? 'Arnav' : 'Shrey'} gives ${exp.settlement.to === 'arnav' ? 'Arnav' : 'Shrey'}</span>
-                                <span class="settlement-amount positive">₹${exp.settlement.amount.toFixed(2)}</span>
+                            <div class="settlement-header">
+                                <div class="settlement-title">💸 Settlement</div>
+                            </div>
+                            <div class="settlement-main">
+                                <div class="settlement-text">${exp.settlement.text}</div>
+                                <div class="settlement-amount">₹${exp.settlement.amount.toFixed(2)}</div>
                             </div>
                             <div class="settlement-note">
-                                <strong>How it works:</strong> In Splitwise, ${exp.payer === 'arnav' ? 'Shrey owes Arnav ₹' + exp.splitwiseDebts.shreyOwes.toFixed(2) : 'Arnav owes Shrey ₹' + exp.splitwiseDebts.arnavOwes.toFixed(2)}. 
-                                But after sharing the ₹${exp.profit.toFixed(2)} profit equally (₹${exp.profitEach.toFixed(2)} each), 
-                                ${exp.settlement.from === 'arnav' ? 'Arnav' : 'Shrey'} should give ₹${exp.settlement.amount.toFixed(2)} to ${exp.settlement.to === 'arnav' ? 'Arnav' : 'Shrey'}.
-                                This way both Arnav and Shrey benefit from the profit, and Sharma pays the full inflated amount.
+                                <strong>Details:</strong> Bill inflated to ₹${exp.inflatedAmount.toFixed(2)} (+${exp.inflationPercent}%). 
+                                The ₹${exp.profit.toFixed(2)} profit is split equally, so 
+                                ${exp.settlement.from === 'arnav' ? 'Arnav' : 'Shrey'} gives 
+                                ${exp.settlement.to === 'arnav' ? 'Arnav' : 'Shrey'} half the profit.
                             </div>
                         </div>
 
-                        <button class="delete-btn" onclick="deleteExpense('${exp.id}')">🗑️ Delete Expense</button>
+                        <button class="delete-btn" onclick="deleteExpense('${exp.id}')">🗑️ Delete</button>
                     </div>
                 `;
             }).join('');
@@ -1068,24 +1093,24 @@
             const profit = expenses.reduce((sum, e) => sum + e.profit, 0);
 
             document.getElementById('statCount').textContent = count;
-            document.getElementById('statSpent').textContent = `₹${spent.toFixed(2)}`;
-            document.getElementById('statProfit').textContent = `₹${profit.toFixed(2)}`;
-            document.getElementById('expenseSubtitle').textContent = count > 0 ? 
-                `${count} expense${count > 1 ? 's' : ''} recorded` : 
-                'No expenses yet';
+            document.getElementById('statSpent').textContent = `₹${spent.toFixed(0)}`;
+            document.getElementById('statProfit').textContent = `₹${profit.toFixed(0)}`;
+            document.getElementById('expenseSubtitle').textContent = count > 0 
+                ? `${count} expense${count > 1 ? 's' : ''} recorded` 
+                : 'No expenses yet';
         }
 
         // Delete Expense
         window.deleteExpense = async function(id) {
             if (!confirm('Delete this expense?')) return;
             try {
-                await deleteDoc(doc(db, 'profitsplit_v2', id));
+                await deleteDoc(doc(db, 'profitsplit_expenses', id));
             } catch (error) {
-                alert('Error: ' + error.message);
+                alert('Failed to delete. Please try again.');
             }
         };
 
-        // Initialize preview on load
+        // Initialize
         calculatePreview();
     </script>
 </body>
