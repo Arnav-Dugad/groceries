@@ -3,76 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grocery Splitter</title>
+    <title>Bill Splitter Pro</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
-        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { color: #333; margin-top: 0; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .results { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #4CAF50; }
-        .result-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-        .highlight { font-weight: bold; color: #2e7d32; }
-        .secret { color: #d32f2f; font-weight: bold; }
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --dark: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+        }
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            background-color: var(--dark); 
+            color: var(--text);
+            display: flex; justify-content: center; padding: 20px; margin: 0;
+        }
+        .container { width: 100%; max-width: 500px; }
+        .card { 
+            background: var(--card); padding: 2rem; border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid #334155;
+        }
+        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; color: var(--primary); }
+        
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #94a3b8; }
+        input { 
+            width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155;
+            border-radius: 8px; color: white; font-size: 1.1rem; outline: none; transition: 0.2s;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+
+        .public-view { 
+            background: rgba(99, 102, 241, 0.1); padding: 15px; 
+            border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2); margin-bottom: 20px;
+        }
+        .secret-view { 
+            background: rgba(236, 72, 153, 0.1); padding: 15px; 
+            border-radius: 12px; border: 1px dashed var(--secondary);
+        }
+        
+        .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .val { font-weight: 600; }
+        .label-sm { font-size: 0.85rem; color: #94a3b8; }
+        
+        .badge { 
+            padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; text-transform: uppercase; 
+            font-weight: bold; margin-bottom: 5px; display: inline-block;
+        }
+        .bg-blue { background: var(--primary); color: white; }
+        .bg-pink { background: var(--secondary); color: white; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+        th { text-align: left; color: #94a3b8; padding-bottom: 8px; border-bottom: 1px solid #334155; }
+        td { padding: 10px 0; border-bottom: 1px solid #1e293b; }
+        .profit-text { color: #4ade80; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Split the Bill</h2>
-    <label for="totalBill">Original Bill Amount</label>
-    <input type="number" id="totalBill" placeholder="Enter amount" oninput="calculate()">
+<div class="container">
+    <div class="card">
+        <h1>Expense Distribution</h1>
+        
+        <div class="input-group">
+            <label>Actual Store Receipt Total</label>
+            <input type="number" id="bill" placeholder="e.g. 1000" oninput="runSplit()">
+        </div>
 
-    <div class="results">
-        <div class="result-item">
-            <span>Inflated Total (130%):</span>
-            <span id="inflatedTotal" class="highlight">0</span>
+        <div class="input-group">
+            <label>Hidden Margin (%)</label>
+            <input type="number" id="margin" value="30" oninput="runSplit()">
         </div>
-        <div class="result-item">
-            <span>Each person pays:</span>
-            <span id="share" class="highlight">0</span>
+
+        <div class="public-view">
+            <span class="badge bg-blue">Public (What C & D See)</span>
+            <div class="row">
+                <span>"Official" Total:</span>
+                <span class="val" id="dispInflated">0.00</span>
+            </div>
+            <div class="row">
+                <span>Per Person Share:</span>
+                <span class="val" id="dispShare">0.00</span>
+            </div>
         </div>
-        <hr>
-        <div class="result-item">
-            <span>Total Secret Profit:</span>
-            <span id="totalProfit" class="secret">0</span>
-        </div>
-        <div class="result-item">
-            <span>A & B each keep:</span>
-            <span id="kickback" class="secret">0</span>
-        </div>
-        <hr>
-        <div class="result-item">
-            <span><strong>A & B Net Cost:</strong></span>
-            <span id="netAB" style="font-weight:bold;">0</span>
-        </div>
-        <div class="result-item">
-            <span><strong>C & D Net Cost:</strong></span>
-            <span id="netCD" style="font-weight:bold;">0</span>
+
+        <div class="secret-view">
+            <span class="badge bg-pink">Secret (A & B Internal)</span>
+            <div class="row">
+                <span>Total Profit:</span>
+                <span class="val profit-text" id="dispProfit">0.00</span>
+            </div>
+            <div class="row">
+                <span>Per Partner Kickback:</span>
+                <span class="val profit-text" id="dispKickback">0.00</span>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Person</th>
+                        <th>Pays</th>
+                        <th>Net Cost</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
-function calculate() {
-    const T = parseFloat(document.getElementById('totalBill').value) || 0;
+function runSplit() {
+    const total = parseFloat(document.getElementById('bill').value) || 0;
+    const marginPct = parseFloat(document.getElementById('margin').value) || 0;
     
-    // Logic
-    const I = T * 1.30;
-    const S = I / 4;
-    const profit = I - T;
-    const kickback = profit / 2;
-    const netAB = S - kickback;
-    const netCD = S;
+    // Logic Correction
+    const multiplier = 1 + (marginPct / 100);
+    const inflatedTotal = total * multiplier;
+    const share = inflatedTotal / 4;
+    const totalProfit = inflatedTotal - total;
+    const individualKickback = totalProfit / 2;
+    
+    const netAB = share - individualKickback;
+    const netCD = share;
 
-    // Display
-    document.getElementById('inflatedTotal').innerText = I.toFixed(2);
-    document.getElementById('share').innerText = S.toFixed(2);
-    document.getElementById('totalProfit').innerText = profit.toFixed(2);
-    document.getElementById('kickback').innerText = kickback.toFixed(2);
-    document.getElementById('netAB').innerText = netAB.toFixed(2);
-    document.getElementById('netCD').innerText = netCD.toFixed(2);
+    // Updates
+    document.getElementById('dispInflated').innerText = inflatedTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById('dispShare').innerText = share.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById('dispProfit').innerText = totalProfit.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById('dispKickback').innerText = individualKickback.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+    const people = [
+        { name: 'Person A', pays: share, net: netAB, type: 'Partner' },
+        { name: 'Person B', pays: share, net: netAB, type: 'Partner' },
+        { name: 'Person C', pays: share, net: netCD, type: 'Target' },
+        { name: 'Person D', pays: share, net: netCD, type: 'Target' }
+    ];
+
+    let html = '';
+    people.forEach(p => {
+        html += `<tr>
+            <td>${p.name}</td>
+            <td>${p.pays.toFixed(2)}</td>
+            <td style="color: ${p.type === 'Partner' ? '#4ade80' : '#f8fafc'}">${p.net.toFixed(2)}</td>
+        </tr>`;
+    });
+    document.getElementById('tableBody').innerHTML = html;
 }
+
+// Init
+runSplit();
 </script>
 
 </body>
