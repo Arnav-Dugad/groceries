@@ -123,6 +123,21 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 32px 28px;
+            padding-bottom: 80px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .footer-auth {
+            margin-top: 40px;
         }
 
         /* Auth */
@@ -863,30 +878,37 @@
         /* Responsive */
         @media (max-width: 768px) {
             .container {
-                padding: 24px 18px;
+                padding: 20px 16px;
+                padding-bottom: 60px;
             }
 
             .header {
-                padding: 16px 18px;
+                padding: 16px 16px;
             }
 
             .auth-card {
-                padding: 40px 32px;
+                padding: 36px 24px;
             }
 
             .card {
-                padding: 32px 24px;
+                padding: 28px 20px;
             }
 
             .stat-value {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
 
             .expense-summary {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 16px;
-                padding: 22px 20px;
+                gap: 14px;
+                padding: 20px 18px;
+            }
+
+            .expense-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
 
             .expense-amount-summary {
@@ -897,8 +919,12 @@
                 align-items: center;
             }
 
+            .expand-icon {
+                margin-left: 0;
+            }
+
             .settlement-amount {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
 
             .details-grid {
@@ -908,18 +934,108 @@
             .logo-section {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 8px;
+                gap: 6px;
             }
 
             .header-user {
                 flex-direction: column;
                 align-items: flex-end;
-                gap: 10px;
+                gap: 8px;
+            }
+
+            .user-name {
+                font-size: 0.8rem;
+            }
+
+            .header-btn {
+                padding: 8px 16px;
+                font-size: 0.8rem;
             }
 
             .expense-quick-info {
                 flex-direction: column;
-                gap: 8px;
+                gap: 6px;
+            }
+
+            .quick-info-item {
+                font-size: 0.8rem;
+            }
+
+            .payer-btn {
+                padding: 18px;
+                font-size: 1rem;
+            }
+
+            .form-input {
+                padding: 16px 18px;
+                font-size: 1rem;
+            }
+
+            .form-input.with-icon {
+                padding-left: 50px;
+            }
+
+            .form-input.with-suffix {
+                padding-right: 50px;
+            }
+
+            .btn {
+                padding: 16px;
+                font-size: 1rem;
+            }
+
+            .card-title {
+                font-size: 1.6rem;
+            }
+
+            .card-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .stat-card {
+                padding: 24px;
+            }
+
+            .preview-box {
+                padding: 20px;
+            }
+
+            .expense-number {
+                font-size: 1.3rem;
+            }
+
+            .amount-large {
+                font-size: 1.6rem;
+            }
+
+            .expense-details-content {
+                padding: 0 18px 20px 18px;
+            }
+
+            .details-section {
+                padding: 18px;
+            }
+
+            .settlement-box {
+                padding: 20px;
+            }
+
+            .settlement-main {
+                padding: 20px;
+            }
+
+            .settlement-text {
+                font-size: 1rem;
+            }
+
+            .footer {
+                padding: 20px 16px;
+                font-size: 0.8rem;
             }
         }
 
@@ -946,49 +1062,56 @@
 
     <!-- Auth Container -->
     <div id="authContainer" class="auth-wrapper">
-        <!-- Login -->
-        <div id="loginForm" class="auth-card">
-            <h2>Welcome Back</h2>
-            <p class="auth-subtitle">Access shared expense workspace</p>
-            <div id="loginMessage"></div>
-            <form onsubmit="login(event)">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="loginEmail" placeholder="you@example.com" required>
+        <div>
+            <!-- Login -->
+            <div id="loginForm" class="auth-card">
+                <h2>Welcome Back</h2>
+                <p class="auth-subtitle">Access shared expense workspace</p>
+                <div id="loginMessage"></div>
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                </form>
+                <div class="switch-text">
+                    Don't have an account? <a class="switch-link" onclick="showSignup()">Create one</a>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn">Sign In</button>
-            </form>
-            <div class="switch-text">
-                Don't have an account? <a class="switch-link" onclick="showSignup()">Create one</a>
             </div>
-        </div>
 
-        <!-- Signup -->
-        <div id="signupForm" class="auth-card" style="display: none;">
-            <h2>Join Workspace</h2>
-            <p class="auth-subtitle">Create account to track expenses</p>
-            <div id="signupMessage"></div>
-            <form onsubmit="signup(event)">
-                <div class="form-group">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-input" id="signupName" placeholder="Your name" required>
+            <!-- Signup -->
+            <div id="signupForm" class="auth-card" style="display: none;">
+                <h2>Join Workspace</h2>
+                <p class="auth-subtitle">Create account to track expenses</p>
+                <div id="signupMessage"></div>
+                <form onsubmit="signup(event)">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" id="signupName" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="signupEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="signupPassword" placeholder="Minimum 6 characters" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                </form>
+                <div class="switch-text">
+                    Already have an account? <a class="switch-link" onclick="showLogin()">Sign in</a>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="signupEmail" placeholder="you@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="signupPassword" placeholder="Minimum 6 characters" required minlength="6">
-                </div>
-                <button type="submit" class="btn">Create Account</button>
-            </form>
-            <div class="switch-text">
-                Already have an account? <a class="switch-link" onclick="showLogin()">Sign in</a>
+            </div>
+
+            <!-- Footer for Auth -->
+            <div class="footer footer-auth">
+                Arnav Dugad © <span id="authYear"></span>
             </div>
         </div>
     </div>
@@ -996,26 +1119,7 @@
     <!-- Dashboard -->
     <div id="dashboard" class="dashboard">
         <div class="container">
-            <!-- Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Total Expenses</div>
-                    <div class="stat-value" id="statCount">0</div>
-                    <div class="stat-subtext">All time</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Money Spent</div>
-                    <div class="stat-value" id="statSpent">₹0</div>
-                    <div class="stat-subtext">Actual amount</div>
-                </div>
-                <div class="stat-card profit">
-                    <div class="stat-label">Total Profit</div>
-                    <div class="stat-value" id="statProfit">₹0</div>
-                    <div class="stat-subtext">Shared gain</div>
-                </div>
-            </div>
-
-            <!-- Add Expense -->
+            <!-- Add Expense - Moved to Top -->
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Add Expense</h2>
@@ -1081,6 +1185,25 @@
                 </form>
             </div>
 
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Expenses</div>
+                    <div class="stat-value" id="statCount">0</div>
+                    <div class="stat-subtext">All time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Money Spent</div>
+                    <div class="stat-value" id="statSpent">₹0</div>
+                    <div class="stat-subtext">Actual amount</div>
+                </div>
+                <div class="stat-card profit">
+                    <div class="stat-label">Total Profit</div>
+                    <div class="stat-value" id="statProfit">₹0</div>
+                    <div class="stat-subtext">Shared gain</div>
+                </div>
+            </div>
+
             <!-- Expense List -->
             <div class="card">
                 <div class="card-header">
@@ -1091,6 +1214,11 @@
                     <div class="loading"><div class="spinner"></div></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Footer for Dashboard -->
+        <div class="footer">
+            Arnav Dugad © <span id="dashboardYear"></span>
         </div>
     </div>
 
@@ -1115,6 +1243,11 @@
         window.currentUser = null;
         window.allExpenses = [];
         window.selectedPayer = 'arnav';
+
+        // Set current year in footer
+        const currentYear = new Date().getFullYear();
+        document.getElementById('authYear').textContent = currentYear;
+        document.getElementById('dashboardYear').textContent = currentYear;
 
         // Auth State
         onAuthStateChanged(auth, (user) => {
