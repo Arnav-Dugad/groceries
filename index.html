@@ -2,158 +2,336 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Splitter Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ghost Splitter</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#111827">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Ghost%20Splitter%22,%22short_name%22:%22Ghost%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22#111827%22,%22theme_color%22:%22#10b981%22,%22icons%22:[{%22src%22:%22https://cdn-icons-png.flaticon.com/512/2910/2910795.png%22,%22sizes%22:%22512x512%22,%22type%22:%22image/png%22}]}">
+
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #ec4899;
-            --dark: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
+            --bg: #111827;
+            --card-bg: #1f2937;
+            --primary: #10b981; /* Emerald Green */
+            --danger: #ef4444;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent: #3b82f6;
         }
-        body { 
-            font-family: 'Inter', system-ui, sans-serif; 
-            background-color: var(--dark); 
-            color: var(--text);
-            display: flex; justify-content: center; padding: 20px; margin: 0;
-        }
-        .container { width: 100%; max-width: 500px; }
-        .card { 
-            background: var(--card); padding: 2rem; border-radius: 16px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid #334155;
-        }
-        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; color: var(--primary); }
-        
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #94a3b8; }
-        input { 
-            width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155;
-            border-radius: 8px; color: white; font-size: 1.1rem; outline: none; transition: 0.2s;
-        }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
 
-        .public-view { 
-            background: rgba(99, 102, 241, 0.1); padding: 15px; 
-            border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.2); margin-bottom: 20px;
-        }
-        .secret-view { 
-            background: rgba(236, 72, 153, 0.1); padding: 15px; 
-            border-radius: 12px; border: 1px dashed var(--secondary);
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .val { font-weight: 600; }
-        .label-sm { font-size: 0.85rem; color: #94a3b8; }
-        
-        .badge { 
-            padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; text-transform: uppercase; 
-            font-weight: bold; margin-bottom: 5px; display: inline-block;
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px 16px;
         }
-        .bg-blue { background: var(--primary); color: white; }
-        .bg-pink { background: var(--secondary); color: white; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
-        th { text-align: left; color: #94a3b8; padding-bottom: 8px; border-bottom: 1px solid #334155; }
-        td { padding: 10px 0; border-bottom: 1px solid #1e293b; }
-        .profit-text { color: #4ade80; }
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header & Safe Mode Toggle */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.5px; }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        /* The Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #374151; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 18px; width: 18px;
+            left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border: 1px solid #374151;
+        }
+
+        /* Inputs */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+        .input-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-wrapper { position: relative; }
+        .currency-symbol { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .percent-symbol { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        
+        input {
+            width: 100%;
+            background: #111827;
+            border: 1px solid #374151;
+            color: white;
+            padding: 12px 12px 12px 24px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+        #margin { padding-right: 24px; padding-left: 12px; text-align: right; }
+
+        /* Public View (The Lie) */
+        .public-view { text-align: center; padding: 10px 0; }
+        .big-number { font-size: 2.5rem; font-weight: 800; color: var(--text-main); margin: 5px 0; letter-spacing: -1px; }
+        .sub-label { font-size: 0.9rem; color: var(--text-muted); }
+        .tag { background: rgba(59, 130, 246, 0.15); color: #60a5fa; font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 10px;}
+
+        /* Secret View (The Truth) */
+        .secret-view {
+            border: 1px dashed var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+            transition: filter 0.3s ease, opacity 0.3s ease;
+        }
+        .secret-view.blurred {
+            filter: blur(12px);
+            opacity: 0.4;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .secret-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .secret-tag { color: var(--danger); background: rgba(239, 68, 68, 0.15); }
+
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .profit-val { color: var(--primary); font-weight: 700; }
+        
+        /* Bar Visualizer */
+        .bar-container { height: 8px; background: #374151; border-radius: 4px; overflow: hidden; margin: 20px 0 10px 0; display: flex; }
+        .bar-real { height: 100%; background: #6b7280; }
+        .bar-profit { height: 100%; background: var(--primary); }
+        
+        .bar-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); }
+
+        /* Action Button */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #374151;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-icon { width: 18px; height: 18px; fill: currentColor; }
+        
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: var(--primary);
+            color: #064e3b;
+            text-align: center;
+            border-radius: 50px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="app-container">
+    <header>
+        <h1>Ghost Splitter</h1>
+        <div class="toggle-container">
+            <span>Safe Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="safeModeToggle" onchange="toggleSafeMode()">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </header>
+
     <div class="card">
-        <h1>Expense Distribution</h1>
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Real Total</label>
+                <div class="input-wrapper">
+                    <span class="currency-symbol">$</span>
+                    <input type="number" id="bill" value="100" inputmode="decimal" oninput="calculate()">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Margin</label>
+                <div class="input-wrapper">
+                    <input type="number" id="margin" value="30" inputmode="decimal" oninput="calculate()">
+                    <span class="percent-symbol">%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card public-view">
+        <span class="tag">Display to Group</span>
+        <div class="sub-label" style="margin-top: 10px;">Total Bill Amount</div>
+        <div class="big-number" id="dispInflated">130.00</div>
+        <div class="sub-label">Split 4 ways</div>
+        <div style="font-size: 1.4rem; font-weight: 700; color: var(--accent); margin-top: 5px;">
+            <span id="dispShare">32.50</span> / person
+        </div>
+    </div>
+
+    <div class="card secret-view" id="secretSection">
+        <div class="secret-header">
+            <span class="tag secret-tag">Internal Only</span>
+            <span style="font-size: 0.8rem; color: var(--danger); font-weight: 600;">DO NOT SHOW C & D</span>
+        </div>
         
-        <div class="input-group">
-            <label>Actual Store Receipt Total</label>
-            <input type="number" id="bill" placeholder="e.g. 1000" oninput="runSplit()">
+        <div class="stat-row">
+            <span>Total Skim</span>
+            <span class="profit-val" id="dispTotalProfit">+30.00</span>
+        </div>
+        <div class="stat-row">
+            <span>A & B Kickback</span>
+            <span class="profit-val" id="dispKickback">15.00 each</span>
+        </div>
+        
+        <div style="border-top: 1px solid rgba(239, 68, 68, 0.2); margin: 15px 0;"></div>
+
+        <div class="stat-row">
+            <span>Partner True Cost</span>
+            <span style="color: #fff; font-weight: 700;" id="dispTrueCost">17.50</span>
         </div>
 
-        <div class="input-group">
-            <label>Hidden Margin (%)</label>
-            <input type="number" id="margin" value="30" oninput="runSplit()">
+        <div class="bar-container">
+            <div class="bar-real" id="barReal" style="width: 70%;"></div>
+            <div class="bar-profit" id="barProfit" style="width: 30%;"></div>
         </div>
-
-        <div class="public-view">
-            <span class="badge bg-blue">Public (What C & D See)</span>
-            <div class="row">
-                <span>"Official" Total:</span>
-                <span class="val" id="dispInflated">0.00</span>
-            </div>
-            <div class="row">
-                <span>Per Person Share:</span>
-                <span class="val" id="dispShare">0.00</span>
-            </div>
+        <div class="bar-labels">
+            <span>Real Bill</span>
+            <span style="color: var(--primary);">Profit Margin</span>
         </div>
-
-        <div class="secret-view">
-            <span class="badge bg-pink">Secret (A & B Internal)</span>
-            <div class="row">
-                <span>Total Profit:</span>
-                <span class="val profit-text" id="dispProfit">0.00</span>
-            </div>
-            <div class="row">
-                <span>Per Partner Kickback:</span>
-                <span class="val profit-text" id="dispKickback">0.00</span>
-            </div>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Person</th>
-                        <th>Pays</th>
-                        <th>Net Cost</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    </tbody>
-            </table>
-        </div>
+        
+        <button class="btn" onclick="copyIntel()" style="margin-top: 20px;">
+            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+            Copy Intel for Partner
+        </button>
     </div>
 </div>
 
+<div id="toast">Copied to Clipboard!</div>
+
 <script>
-function runSplit() {
-    const total = parseFloat(document.getElementById('bill').value) || 0;
-    const marginPct = parseFloat(document.getElementById('margin').value) || 0;
-    
-    // Logic Correction
-    const multiplier = 1 + (marginPct / 100);
-    const inflatedTotal = total * multiplier;
-    const share = inflatedTotal / 4;
-    const totalProfit = inflatedTotal - total;
-    const individualKickback = totalProfit / 2;
-    
-    const netAB = share - individualKickback;
-    const netCD = share;
+    function calculate() {
+        const bill = parseFloat(document.getElementById('bill').value) || 0;
+        const margin = parseFloat(document.getElementById('margin').value) || 0;
 
-    // Updates
-    document.getElementById('dispInflated').innerText = inflatedTotal.toLocaleString(undefined, {minimumFractionDigits: 2});
-    document.getElementById('dispShare').innerText = share.toLocaleString(undefined, {minimumFractionDigits: 2});
-    document.getElementById('dispProfit').innerText = totalProfit.toLocaleString(undefined, {minimumFractionDigits: 2});
-    document.getElementById('dispKickback').innerText = individualKickback.toLocaleString(undefined, {minimumFractionDigits: 2});
+        // Logic
+        const multiplier = 1 + (margin / 100);
+        const inflatedTotal = bill * multiplier;
+        const sharePerPerson = inflatedTotal / 4;
+        
+        const totalProfit = inflatedTotal - bill;
+        const kickbackPerPartner = totalProfit / 2;
+        const trueCostPerPartner = sharePerPerson - kickbackPerPartner;
 
-    const people = [
-        { name: 'Person A', pays: share, net: netAB, type: 'Partner' },
-        { name: 'Person B', pays: share, net: netAB, type: 'Partner' },
-        { name: 'Person C', pays: share, net: netCD, type: 'Target' },
-        { name: 'Person D', pays: share, net: netCD, type: 'Target' }
-    ];
+        // Visual Bar Logic
+        const totalBar = bill + totalProfit; // which is inflatedTotal
+        const realPct = (bill / inflatedTotal) * 100;
+        const profitPct = (totalProfit / inflatedTotal) * 100;
 
-    let html = '';
-    people.forEach(p => {
-        html += `<tr>
-            <td>${p.name}</td>
-            <td>${p.pays.toFixed(2)}</td>
-            <td style="color: ${p.type === 'Partner' ? '#4ade80' : '#f8fafc'}">${p.net.toFixed(2)}</td>
-        </tr>`;
-    });
-    document.getElementById('tableBody').innerHTML = html;
-}
+        // DOM Updates
+        document.getElementById('dispInflated').innerText = inflatedTotal.toFixed(2);
+        document.getElementById('dispShare').innerText = sharePerPerson.toFixed(2);
+        
+        document.getElementById('dispTotalProfit').innerText = '+' + totalProfit.toFixed(2);
+        document.getElementById('dispKickback').innerText = kickbackPerPartner.toFixed(2) + ' each';
+        document.getElementById('dispTrueCost').innerText = trueCostPerPartner.toFixed(2);
 
-// Init
-runSplit();
+        // Update Bar
+        document.getElementById('barReal').style.width = realPct + '%';
+        document.getElementById('barProfit').style.width = profitPct + '%';
+    }
+
+    function toggleSafeMode() {
+        const isSafe = document.getElementById('safeModeToggle').checked;
+        const secretSection = document.getElementById('secretSection');
+        
+        if (isSafe) {
+            secretSection.classList.add('blurred');
+        } else {
+            secretSection.classList.remove('blurred');
+        }
+    }
+
+    function copyIntel() {
+        const share = document.getElementById('dispShare').innerText;
+        const trueCost = document.getElementById('dispTrueCost').innerText;
+        const kickback = parseFloat(document.getElementById('dispKickback').innerText).toFixed(2);
+        
+        const text = `🕵️‍♂️ Split Report:\n\nTell C & D: ${share}\n\nActual Cost for us: ${trueCost}\nWe each keep: ${kickback}\n\n(Generated by Ghost Splitter)`;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            showToast();
+        });
+    }
+
+    function showToast() {
+        var x = document.getElementById("toast");
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    // PWA Service Worker Registration
+    const swCode = "self.addEventListener('fetch', function(e){});";
+    const swBlob = new Blob([swCode], {type: 'text/javascript'});
+    const swUrl = URL.createObjectURL(swBlob);
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register(swUrl).catch(()=>{});
+
+    // Run on load
+    calculate();
 </script>
 
 </body>
