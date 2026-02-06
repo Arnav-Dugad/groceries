@@ -35,6 +35,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: var(--bg-primary);
+            background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 50%),
+                              radial-gradient(circle at bottom left, rgba(129, 140, 248, 0.03), transparent 50%);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
@@ -52,6 +54,18 @@
             z-index: 100;
             backdrop-filter: blur(20px);
             box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.3;
         }
 
         .header-content {
@@ -75,6 +89,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.8px;
+            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
         }
 
         .shared-badge {
@@ -138,6 +153,321 @@
 
         .footer-auth {
             margin-top: 40px;
+        }
+
+        /* Settlement Balance Card */
+        .balance-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(129, 140, 248, 0.05));
+            border: 2px solid var(--accent);
+            border-radius: 28px;
+            padding: 36px;
+            margin-bottom: 36px;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .balance-card.has-pending {
+            animation: gentlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% {
+                box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+            }
+            50% {
+                box-shadow: 0 8px 40px rgba(99, 102, 241, 0.35);
+            }
+        }
+
+        .balance-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .balance-title {
+            font-size: 0.9rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .balance-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .balance-display {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .balance-direction {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .balance-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+            line-height: 1;
+        }
+
+        .balance-amount.positive {
+            color: var(--success);
+        }
+
+        .balance-amount.negative {
+            color: var(--danger);
+        }
+
+        .balance-amount.settled {
+            color: var(--text-muted);
+        }
+
+        .balance-note {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 12px;
+        }
+
+        .balance-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        /* Settlement Card */
+        .settlement-card {
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 40px;
+            margin-bottom: 36px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .settlement-card.has-balance {
+            border-color: var(--success);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
+        }
+
+        .settlement-card:hover {
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .settle-form-group {
+            margin-bottom: 22px;
+        }
+
+        .settle-amount-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .settle-quick-btn {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settle-quick-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .settle-quick-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .settle-quick-btn:hover {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .settle-quick-btn.active {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            border-color: var(--success);
+            color: white;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .settle-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settle-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .settle-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .settle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(16, 185, 129, 0.45);
+        }
+
+        .settle-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .settle-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            background: linear-gradient(135deg, var(--text-muted), var(--text-muted));
+        }
+
+        .settle-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Settlement History */
+        .settlement-history {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 2px dashed var(--border);
+        }
+
+        .settlement-history-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        .settlement-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .settlement-item:hover {
+            border-color: var(--success);
+            transform: translateX(4px);
+            box-shadow: -4px 0 0 var(--success);
+        }
+
+        .settlement-item-info {
+            flex: 1;
+        }
+
+        .settlement-item-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .settlement-item-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .settlement-item-amount {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--success);
+            letter-spacing: -0.5px;
+        }
+
+        .settlement-item-delete {
+            padding: 10px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1.5px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            color: var(--danger);
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 16px;
+        }
+
+        .settlement-item-delete:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+            transform: scale(1.05);
+        }
+
+        .settlement-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
         }
 
         /* Auth */
@@ -271,14 +601,127 @@
             margin-bottom: 36px;
         }
 
+        /* Balance Display */
+        .balance-card {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 28px;
+            padding: 36px;
+            margin-bottom: 36px;
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .balance-header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .balance-title {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .balance-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+        }
+
+        .balance-amount-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 32px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .balance-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin-bottom: 12px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .balance-description {
+            font-size: 1.3rem;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-details {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .balance-detail-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .balance-detail-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .balance-detail-value {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .balance-zero {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+        }
+
+        .balance-zero .balance-description {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 24px;
             padding: 30px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .stat-card::before {
@@ -290,17 +733,39 @@
             height: 4px;
             background: linear-gradient(90deg, var(--accent), var(--accent-light));
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.4s;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
         .stat-card:hover {
             border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(99, 102, 241, 0.15);
         }
 
         .stat-card:hover::before {
             opacity: 1;
+        }
+
+        .stat-card:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .stat-card:active {
+            transform: translateY(-4px) scale(1.01);
         }
 
         .stat-label {
@@ -341,10 +806,28 @@
             margin-bottom: 32px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
         }
 
         .card-header {
             margin-bottom: 32px;
+            position: relative;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
         }
 
         .card-title {
@@ -435,7 +918,7 @@
             border-radius: 20px;
             padding: 28px;
             margin: 28px 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .preview-box.active {
@@ -443,6 +926,7 @@
             background: var(--accent-glow);
             border-style: solid;
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+            animation: slideIn 0.4s ease;
         }
 
         .preview-header {
@@ -508,11 +992,27 @@
             margin-bottom: 18px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
+            position: relative;
+        }
+
+        .expense-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+            transition: left 0.5s;
         }
 
         .expense-card:hover {
             border-color: var(--accent);
             box-shadow: var(--shadow-lg);
+        }
+
+        .expense-card:hover::before {
+            left: 100%;
         }
 
         .expense-card.expanded {
@@ -784,6 +1284,26 @@
             font-weight: 900;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .delete-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .delete-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .delete-btn:hover {
@@ -791,6 +1311,20 @@
             color: white;
             border-color: var(--danger);
             transform: translateY(-2px);
+        }
+
+        .delete-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .delete-btn:hover {
+            animation: shake 0.3s ease;
         }
 
         /* Message */
@@ -873,6 +1407,107 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .balance-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .balance-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(99, 102, 241, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes successPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .settlement-card.success {
+            animation: successPulse 0.5s ease;
+        }
+
+        .balance-display {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Enhanced Focus States */
+        .form-input:focus,
+        .payer-btn:focus,
+        .btn:focus,
+        .header-btn:focus {
+            outline: 3px solid rgba(99, 102, 241, 0.4);
+            outline-offset: 2px;
+        }
+
+        .form-input:invalid:not(:placeholder-shown) {
+            border-color: var(--danger);
+        }
+
+        .form-input:valid:not(:placeholder-shown) {
+            border-color: var(--success);
+        }
+
+        /* Enhanced Button Effects */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .payer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payer-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .payer-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         /* Responsive */
@@ -1037,6 +1672,46 @@
                 padding: 20px 16px;
                 font-size: 0.8rem;
             }
+
+            .balance-card {
+                padding: 28px 20px;
+            }
+
+            .balance-amount {
+                font-size: 2.8rem;
+            }
+
+            .balance-direction {
+                font-size: 1.1rem;
+            }
+
+            .balance-icon {
+                font-size: 2.5rem;
+            }
+
+            .settlement-card {
+                padding: 28px 20px;
+            }
+
+            .settle-amount-options {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .settlement-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .settlement-item-amount {
+                font-size: 1.5rem;
+            }
+
+            .settlement-item-delete {
+                width: 100%;
+                margin-left: 0;
+            }
         }
 
         /* Smooth scroll */
@@ -1185,6 +1860,73 @@
                 </form>
             </div>
 
+            <!-- Balance Display -->
+            <div class="balance-card" id="balanceCard">
+                <div class="balance-header">
+                    <div class="balance-title">💰 Net Balance</div>
+                    <div class="balance-subtitle">Who owes whom?</div>
+                </div>
+                <div class="balance-display">
+                    <div class="balance-icon" id="balanceIcon">🎉</div>
+                    <div class="balance-direction" id="balanceDirection">All Settled Up!</div>
+                    <div class="balance-amount settled" id="balanceAmount">₹0</div>
+                    <div class="balance-note" id="balanceNote">No pending settlements</div>
+                </div>
+            </div>
+
+            <!-- Settlement Form -->
+            <div class="settlement-card" id="settlementCard">
+                <div class="card-header">
+                    <h2 class="card-title">💳 Record Settlement</h2>
+                    <p class="card-subtitle">When money is transferred between Arnav & Shrey</p>
+                </div>
+
+                <form onsubmit="recordSettlement(event)">
+                    <div id="settlementMessage"></div>
+
+                    <div class="settle-form-group">
+                        <label class="form-label">Who is Paying?</label>
+                        <div class="payer-selector">
+                            <button type="button" class="payer-btn active" data-payer="arnav" onclick="selectSettlePayer('arnav')">
+                                Arnav
+                            </button>
+                            <button type="button" class="payer-btn" data-payer="shrey" onclick="selectSettlePayer('shrey')">
+                                Shrey
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settle-form-group">
+                        <label class="form-label">Amount to Settle</label>
+                        <div class="settle-amount-options">
+                            <button type="button" class="settle-quick-btn" onclick="setSettleAmount('half')" id="halfBtn">
+                                Half
+                            </button>
+                            <button type="button" class="settle-quick-btn" onclick="setSettleAmount('full')" id="fullBtn">
+                                Full Amount
+                            </button>
+                            <button type="button" class="settle-quick-btn active" onclick="setSettleAmount('custom')" id="customBtn">
+                                Custom
+                            </button>
+                        </div>
+                        <div class="input-wrapper">
+                            <span class="input-icon">₹</span>
+                            <input type="number" class="form-input with-icon" id="settleAmount" placeholder="Enter amount" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="settle-btn" id="settleSubmitBtn">✓ Record Settlement</button>
+                </form>
+
+                <!-- Settlement History -->
+                <div class="settlement-history">
+                    <div class="settlement-history-title">📜 Settlement History</div>
+                    <div id="settlementList">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
@@ -1242,7 +1984,11 @@
 
         window.currentUser = null;
         window.allExpenses = [];
+        window.allSettlements = [];
         window.selectedPayer = 'arnav';
+        window.selectedSettlePayer = 'arnav';
+        window.currentBalance = 0;
+        window.settleMode = 'custom';
 
         // Set current year in footer
         const currentYear = new Date().getFullYear();
@@ -1258,6 +2004,7 @@
                 document.getElementById('headerActions').style.display = 'flex';
                 document.getElementById('headerUserName').textContent = user.displayName || user.email;
                 loadExpenses();
+                loadSettlements();
             } else {
                 window.currentUser = null;
                 document.getElementById('authContainer').style.display = 'flex';
@@ -1583,7 +2330,247 @@
             document.getElementById('expenseSubtitle').textContent = count > 0 
                 ? `${count} expense${count > 1 ? 's' : ''} • Click to expand` 
                 : 'No expenses yet';
+
+            // Calculate net balance between Arnav and Shrey
+            let arnavOwesShrey = 0; // Positive means Arnav owes Shrey
+            
+            // Add expenses
+            expenses.forEach(exp => {
+                if (exp.settlement.from === 'arnav') {
+                    arnavOwesShrey += exp.settlement.amount;
+                } else if (exp.settlement.from === 'shrey') {
+                    arnavOwesShrey -= exp.settlement.amount;
+                }
+            });
+
+            // Subtract settlements (payments reduce debt)
+            window.allSettlements.forEach(settlement => {
+                if (settlement.from === 'arnav') {
+                    // Arnav paid Shrey, reduces Arnav's debt
+                    arnavOwesShrey -= settlement.amount;
+                } else if (settlement.from === 'shrey') {
+                    // Shrey paid Arnav, increases Arnav's debt (or reduces Shrey's debt)
+                    arnavOwesShrey += settlement.amount;
+                }
+            });
+
+            // Store current balance for settlement validation
+            window.currentBalance = arnavOwesShrey;
+
+            const balanceIcon = document.getElementById('balanceIcon');
+            const balanceDirection = document.getElementById('balanceDirection');
+            const balanceAmount = document.getElementById('balanceAmount');
+            const balanceNote = document.getElementById('balanceNote');
+            const settleBtn = document.getElementById('settleSubmitBtn');
+            const settlementCard = document.getElementById('settlementCard');
+            const balanceCard = document.getElementById('balanceCard');
+
+            if (Math.abs(arnavOwesShrey) < 0.01) {
+                // Settled up
+                balanceIcon.textContent = '🎉';
+                balanceDirection.textContent = 'All Settled Up!';
+                balanceAmount.textContent = '₹0';
+                balanceAmount.className = 'balance-amount settled';
+                balanceNote.textContent = 'No pending settlements';
+                settleBtn.disabled = true;
+                settleBtn.textContent = '✓ All Settled';
+                settlementCard.classList.remove('has-balance');
+                balanceCard.classList.remove('has-pending');
+            } else if (arnavOwesShrey > 0) {
+                // Arnav owes Shrey
+                balanceIcon.textContent = '💸';
+                balanceDirection.textContent = 'Arnav owes Shrey';
+                balanceAmount.textContent = `₹${Math.abs(arnavOwesShrey).toFixed(2)}`;
+                balanceAmount.className = 'balance-amount negative';
+                balanceNote.textContent = 'Arnav needs to pay Shrey this amount';
+                settleBtn.disabled = false;
+                settleBtn.textContent = '✓ Record Settlement';
+                settlementCard.classList.add('has-balance');
+                balanceCard.classList.add('has-pending');
+            } else {
+                // Shrey owes Arnav
+                balanceIcon.textContent = '💰';
+                balanceDirection.textContent = 'Shrey owes Arnav';
+                balanceAmount.textContent = `₹${Math.abs(arnavOwesShrey).toFixed(2)}`;
+                balanceAmount.className = 'balance-amount positive';
+                balanceNote.textContent = 'Shrey needs to pay Arnav this amount';
+                settleBtn.disabled = false;
+                settleBtn.textContent = '✓ Record Settlement';
+                settlementCard.classList.add('has-balance');
+                balanceCard.classList.add('has-pending');
+            }
         }
+
+        // Settlement Functions
+        window.selectSettlePayer = function(payer) {
+            window.selectedSettlePayer = payer;
+            const buttons = document.querySelectorAll('.settlement-card .payer-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.settlement-card [data-payer="${payer}"]`).classList.add('active');
+        };
+
+        window.setSettleAmount = function(mode) {
+            window.settleMode = mode;
+            document.querySelectorAll('.settle-quick-btn').forEach(btn => btn.classList.remove('active'));
+            
+            if (mode === 'full') {
+                document.getElementById('fullBtn').classList.add('active');
+                document.getElementById('settleAmount').value = Math.abs(window.currentBalance).toFixed(2);
+            } else if (mode === 'half') {
+                document.getElementById('halfBtn').classList.add('active');
+                document.getElementById('settleAmount').value = (Math.abs(window.currentBalance) / 2).toFixed(2);
+            } else {
+                document.getElementById('customBtn').classList.add('active');
+            }
+        };
+
+        window.recordSettlement = async function(event) {
+            event.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('settleAmount').value);
+            const from = window.selectedSettlePayer;
+            const to = from === 'arnav' ? 'shrey' : 'arnav';
+            
+            const messageDiv = document.getElementById('settlementMessage');
+            const settlementCard = document.getElementById('settlementCard');
+            messageDiv.innerHTML = '';
+
+            if (!amount || isNaN(amount) || amount <= 0) {
+                messageDiv.innerHTML = '<div class="message error">⚠️ Please enter a valid amount greater than zero</div>';
+                return;
+            }
+
+            // Check if settlement is in correct direction based on balance
+            if (Math.abs(window.currentBalance) < 0.01) {
+                messageDiv.innerHTML = '<div class="message error">⚠️ No outstanding balance to settle</div>';
+                return;
+            }
+
+            if (window.currentBalance > 0.01 && from !== 'arnav') {
+                messageDiv.innerHTML = '<div class="message error">⚠️ Arnav owes Shrey. Arnav should be the one paying.</div>';
+                return;
+            } else if (window.currentBalance < -0.01 && from !== 'shrey') {
+                messageDiv.innerHTML = '<div class="message error">⚠️ Shrey owes Arnav. Shrey should be the one paying.</div>';
+                return;
+            }
+
+            if (amount > Math.abs(window.currentBalance) + 0.01) {
+                messageDiv.innerHTML = `<div class="message error">⚠️ Amount (₹${amount.toFixed(2)}) exceeds outstanding balance of ₹${Math.abs(window.currentBalance).toFixed(2)}</div>`;
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, 'profitsplit_settlements'), {
+                    from,
+                    to,
+                    amount,
+                    addedBy: {
+                        uid: currentUser.uid,
+                        name: currentUser.displayName || currentUser.email,
+                        email: currentUser.email
+                    },
+                    timestamp: serverTimestamp()
+                });
+
+                // Success animation
+                settlementCard.classList.add('success');
+                setTimeout(() => {
+                    settlementCard.classList.remove('success');
+                }, 500);
+
+                messageDiv.innerHTML = '<div class="message success">✅ Settlement recorded successfully!</div>';
+                event.target.reset();
+                window.settleMode = 'custom';
+                document.querySelectorAll('.settle-quick-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById('customBtn').classList.add('active');
+
+                setTimeout(() => {
+                    messageDiv.innerHTML = '';
+                }, 2500);
+
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.innerHTML = '<div class="message error">⚠️ Failed to record settlement. Please try again.</div>';
+            }
+        };
+
+        window.loadSettlements = function() {
+            if (!currentUser) return;
+
+            const q = query(collection(db, 'profitsplit_settlements'));
+
+            onSnapshot(q, 
+                (snapshot) => {
+                    window.allSettlements = [];
+                    snapshot.forEach((doc) => {
+                        window.allSettlements.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    window.allSettlements.sort((a, b) => {
+                        const timeA = a.timestamp?.toMillis() || 0;
+                        const timeB = b.timestamp?.toMillis() || 0;
+                        return timeB - timeA;
+                    });
+
+                    displaySettlements(window.allSettlements);
+                    // Recalculate stats with settlements
+                    updateStats(window.allExpenses);
+                },
+                (error) => {
+                    console.error('Error loading settlements:', error);
+                }
+            );
+        };
+
+        function displaySettlements(settlements) {
+            const listDiv = document.getElementById('settlementList');
+
+            if (settlements.length === 0) {
+                listDiv.innerHTML = '<div class="settlement-empty">No settlements recorded yet</div>';
+                return;
+            }
+
+            listDiv.innerHTML = settlements.map((settlement) => {
+                const timestamp = settlement.timestamp?.toDate() || new Date();
+                const dateStr = timestamp.toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                const timeStr = timestamp.toLocaleTimeString('en-IN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const fromName = settlement.from === 'arnav' ? 'Arnav' : 'Shrey';
+                const toName = settlement.to === 'arnav' ? 'Arnav' : 'Shrey';
+                const addedByName = settlement.addedBy?.name || 'Unknown';
+
+                return `
+                    <div class="settlement-item">
+                        <div class="settlement-item-info">
+                            <div class="settlement-item-text">💸 ${fromName} paid ${toName}</div>
+                            <div class="settlement-item-meta">
+                                ${dateStr} at ${timeStr} • Added by ${addedByName}
+                            </div>
+                        </div>
+                        <div class="settlement-item-amount">₹${settlement.amount.toFixed(2)}</div>
+                        <button class="settlement-item-delete" onclick="deleteSettlement('${settlement.id}')">🗑️ Delete</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.deleteSettlement = async function(id) {
+            if (!confirm('Delete this settlement record?')) return;
+            try {
+                await deleteDoc(doc(db, 'profitsplit_settlements', id));
+            } catch (error) {
+                alert('Failed to delete. Please try again.');
+            }
+        };
 
         window.deleteExpense = async function(id) {
             if (!confirm('Delete this expense?')) return;
